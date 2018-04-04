@@ -18,19 +18,19 @@ using namespace std;
 #define NUM_OF_TOOLS (NUM_OF_B + NUM_OF_F + NUM_OF_J + NUM_OF_P + NUM_OF_R + NUM_OF_S)
 
 enum playerEnum {
-	PLAYER_1 = 1,
-	PLAYER_2 = 2,
-	NO_PLAYER = 0,
-    DRAW = 0
+	PLAYER_1,
+	PLAYER_2,
+	NO_PLAYER,
+    DRAW
 };
 
 enum toolType {
-	ROCK = 0,
-	PAPER = 1,
-	SCISSORS = 2,
-	BOMB = 3,
-	FLAG = 4,
-	EMPTY = 5,
+	ROCK ,
+	PAPER,
+	SCISSORS,
+	BOMB,
+	FLAG,
+	EMPTY,
 };
 
 enum executeCommandMessage{

@@ -267,7 +267,15 @@ endGameMessage Game::checkGameWinner(){
     endGameReason player1LossReason = playerHasLost(this->player1Tools);
     endGameReason player2LossReason = playerHasLost(this->player2Tools);
 
-    if(player1LossReason!=NO_WINNER && player2LossReason!=NO_WINNER){return createEndGameMessage(player1LossReason, DRAW);}
+    if(player1LossReason!=NO_WINNER && player2LossReason!=NO_WINNER){
+        if(player1LossReason == NO_MORE_FLAGS){
+            return createEndGameMessage(DRAW_POSITIONING_ENDED_WITH_NO_FLAGS, DRAW);
+        }
+        else{
+            return createEndGameMessage(DRAW_POSITIONING_ENDED_WITH_NO_MOVING_TOOLS, DRAW);
+        }
+
+    }
     else if(player1LossReason!=NO_WINNER) {return createEndGameMessage(player1LossReason, PLAYER_2);}
     else if(player2LossReason!=NO_WINNER) {return createEndGameMessage(player2LossReason, PLAYER_1);}
     else {return createEndGameMessage(NO_WINNER, NO_PLAYER);}
