@@ -38,6 +38,5 @@ endGameMessage initializeGame(Game game, const char* filePath_player1, const cha
         game.setPlayerTools(posCommandsPlayer1, PLAYER_2);
         return game.checkGameWinner();
     }
-
 }
 

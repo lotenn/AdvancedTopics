@@ -9,6 +9,6 @@ using namespace std;
 
 
 
-endGameMessage initializeGame();
+endGameMessage initializeGame(Game game, const char* filePath_player1, const char* filePath_player2);
 
 #endif //EX1_MAINAUX_H
