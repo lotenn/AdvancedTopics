@@ -77,11 +77,6 @@ bool isCharArrValidJokerToolType(char *c) {
 Game::Game():emptyTool(new EmptyTool(NO_PLAYER)), player1Score(0), player2Score(0), currentPlayer(PLAYER_1){
     player1Tools.reserve(NUM_OF_TOOLS);
     player2Tools.reserve(NUM_OF_TOOLS);
-    for(int i=0; i<N; i++){
-        for(int j=0; j<M; j++){
-            gameBoard[i][j] = emptyTool;
-        }
-    }
     int toolIndex = 0;
     for(int i = toolIndex; toolIndex<(i+NUM_OF_R); toolIndex++){
         player1Tools.push_back(new RockTool(PLAYER_1));
@@ -120,6 +115,20 @@ Game::~Game() {
         delete player2Tools[i];
     }
     delete emptyTool;
+}
+
+void Game::resetGameBoard(){
+    for(int i=0; i<N; i++){
+        for(int j=0; j<M; j++){
+            gameBoard[i][j] = emptyTool;
+        }
+    }
+
+    for(Tool *tool: player1Tools)
+        tool->removeTool();
+
+    for(Tool *tool: player2Tools)
+        tool->removeTool();
 }
 
 void Game::setPlayerTools(const vector<PositioningCommand> &commands, playerEnum player){

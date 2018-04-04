@@ -1,6 +1,7 @@
 #include "MainAux.h"
 
-endGameMessage initializeGame(Game game, const char* filePath_player1, const char* filePath_player2){
+endGameMessage initializeGame(Game& game, const char* filePath_player1, const char* filePath_player2){
+    game.resetGameBoard();
     vector<PositioningCommand> posCommandsPlayer1;
     vector<PositioningCommand> posCommandsPlayer2;
     endGameMessage player1Msg = validatePositioningFile(filePath_player1, posCommandsPlayer1);
@@ -35,7 +36,7 @@ endGameMessage initializeGame(Game game, const char* filePath_player1, const cha
     //no file problems, placing tool as specified
     else{
         game.setPlayerTools(posCommandsPlayer1, PLAYER_1);
-        game.setPlayerTools(posCommandsPlayer1, PLAYER_2);
+        game.setPlayerTools(posCommandsPlayer2, PLAYER_2);
         return game.checkGameWinner();
     }
 }
