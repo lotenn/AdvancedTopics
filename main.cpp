@@ -8,7 +8,7 @@ int main() {
 	vector<PositioningCommand> commands;
     vector<PositioningCommand> commands2;
 
-    const char* filePath = "C:/Users/loten/CLionProjects/EX1/player1.rps_board";
+    const char* filePath = "player1.rps_board";
     endGameMessage msg = validatePositioningFile(filePath, commands);
     validatePositioningFile("C:/Users/loten/CLionProjects/EX1/player2.rps_board", commands2);
 
