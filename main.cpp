@@ -10,7 +10,7 @@ int main() {
 
     const char* filePath = "player1.rps_board";
     endGameMessage msg = validatePositioningFile(filePath, commands);
-    validatePositioningFile("C:/Users/loten/CLionProjects/EX1/player2.rps_board", commands2);
+    validatePositioningFile("C:/Users/lotn/CLionProjects/EX1/player2.rps_board", commands2);
 
 
     for(int i=0; i<(int)commands.size(); i++){
