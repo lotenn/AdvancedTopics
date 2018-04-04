@@ -278,7 +278,9 @@ public:
 	Game();
 	~Game();
 	void setPlayerTools(const vector<PositioningCommand> &commands, playerEnum player);
-    playerEnum getCurrentPlayer(){return currentPlayer;}
+	executeCommandMessage playTurn(Command cmd, playerEnum player);
+	playerEnum getCurrentPlayer(){return currentPlayer;}
+	void setCurrentPlayer(playerEnum player);
     Tool* battleWinner(Tool *source, Tool *target);
     executeCommandMessage moveTool(Game* game, Cell target);
 	executeCommandMessage executeCommand(Command cmd);

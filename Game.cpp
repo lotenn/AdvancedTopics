@@ -111,6 +111,15 @@ void Game::setPlayerTools(const vector<PositioningCommand> &commands, playerEnum
     //end of commands vector
 }
 
+executeCommandMessage Game::playTurn(Command cmd, playerEnum player){
+    this->setCurrentPlayer(player);
+    return executeCommand(cmd);
+}
+
+void Game::setCurrentPlayer(playerEnum player){
+    this->currentPlayer = player;
+}
+
 bool Tool::canCapture(Tool *other) {
     vector<toolType> weakerTools = this->getWeakerTools();
     toolType otherType = other->getType();
