@@ -8,9 +8,9 @@ int main() {
 	vector<PositioningCommand> commands;
     vector<PositioningCommand> commands2;
 
-    const char* filePath = "player1.rps_board";
-    endGameMessage msg = validatePositioningFile(filePath, commands);
-    validatePositioningFile("C:/Users/lotn/CLionProjects/EX1/player2.rps_board", commands2);
+
+    endGameMessage msg = validatePositioningFile("../player1.rps_board", commands);
+    validatePositioningFile("../player2.rps_board", commands2);
 
 
     for(int i=0; i<(int)commands.size(); i++){
@@ -23,7 +23,7 @@ int main() {
     game.setPlayerTools(commands2, PLAYER_2);
 
     ofstream of;
-    of.open("C:/Users/loten/CLionProjects/EX1/rps.output", ios::out);
+    of.open("../rps.output", ios::out);
 
 
     printBoard(of,game);

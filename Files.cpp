@@ -87,7 +87,7 @@ endGameMessage validateMoveFile(const char *filePath, vector<Command> &commands)
 void printBoard(ofstream& outputFile, Game& game) {
     if(outputFile.is_open()){
         for (int row = M-1; row >= 0; row--) {
-            for (int col = 0; col < N-1; col++){
+            for (int col = 0; col < N; col++){
                 outputFile << game.gameBoard[row][col]->toChar();
             }
             outputFile << endl;
