@@ -4,30 +4,9 @@
 using namespace std;
 
 int main() {
-
-	vector<PositioningCommand> commands;
-    vector<PositioningCommand> commands2;
-
-
-    endGameMessage msg = validatePositioningFile("../player1.rps_board", commands);
-    validatePositioningFile("../player2.rps_board", commands2);
-
-
-    for(int i=0; i<(int)commands.size(); i++){
-        cout << "cmd: " << commands.at(i).toolType << ":" << commands.at(i).source.x << "," <<  commands.at(i).source.y <<endl;
-    }
-    cout << "msg: " << msg.reason << endl;
-
     Game game;
-    game.setPlayerTools(commands, PLAYER_1);
-    game.setPlayerTools(commands2, PLAYER_2);
+    vector<PositioningCommand> player1PosCommands;
+//    initializeGame();
 
-    ofstream of;
-    of.open("../rps.output", ios::out);
-
-
-    printBoard(of,game);
-
-    of.close();
 	return 0;
 }

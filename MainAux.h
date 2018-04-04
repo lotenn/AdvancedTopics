@@ -3,20 +3,12 @@
 
 #include <string>
 #include <string.h>
-#define M 10
-#define N 10
+#include "Files.h"
 
 using namespace std;
 
-bool isNumInRange(char* str, int rangeSatrt, int rangeEnd);
 
-bool isValidToolType(char tool);
 
-bool isCharArrValidToolType(char *c);
-
-bool isValidJokerToolType(char tool);
-
-bool isCharArrValidJokerToolType(char *c);
-
+endGameMessage initializeGame();
 
 #endif //EX1_MAINAUX_H

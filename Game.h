@@ -3,9 +3,12 @@
 
 #include <vector>
 #include "Command.h"
-#include "MainAux.h"
-using namespace std;
+#include <string.h>
+#include <string>
 
+using namespace std;
+#define M 10
+#define N 10
 #define NUM_OF_R 2
 #define NUM_OF_P 5
 #define NUM_OF_S 1
@@ -40,7 +43,10 @@ enum endGameReason{
     NO_MORE_FLAGS,
     NO_MOVING_TOOLS,
 	NO_POSITIONING_FILE,
-    BAD_POSITIONING_FILE_PLAYER,
+    BAD_POSITIONING_FILE_SYNTAX,
+	BAD_POSITIONING_FILE_NOT_ENOUGH_FLAGS,
+	BAD_POSITIONING_FILE_TOO_MANY_TOOLS,
+	BAD_POSITIONING_FILE_DUPLICATE_CELL_POSITION,
 	NO_MOVE_FILE,
 	BAD_MOVE_FILE_PLAYER,
     DRAW_NO_MORE_MOVES,
@@ -58,6 +64,16 @@ struct endGameMessage{
 endGameMessage createEndGameMessage(endGameReason reason, playerEnum winner, int _errorLine1, int _errorLine2);
 
 endGameMessage createEndGameMessage(endGameReason reason, playerEnum winner);
+
+bool isNumInRange(char* str, int rangeSatrt, int rangeEnd);
+
+bool isValidToolType(char tool);
+
+bool isCharArrValidToolType(char *c);
+
+bool isValidJokerToolType(char tool);
+
+bool isCharArrValidJokerToolType(char *c);
 
 class Tool{
 private:
@@ -263,6 +279,8 @@ public:
 	}
 };
 
+
+
 class Game
 {
 private:
@@ -288,12 +306,13 @@ public:
 	executeCommandMessage executeMove(Command cmd);
     endGameReason playerHasLost(vector<Tool*> playerTools);
     endGameMessage checkGameWinner();
+    void raisePlayerScore(int score, playerEnum player);
+
 	//testing
     void updateCell(Cell cell, Tool *tool){
         this->gameBoard[getRow(cell)][getCol(cell)] = tool;
     }
-
-    friend void printBoard(ofstream& outputFile, Game& game);
+	string boardToString();
 
 };
 toolType charToToolType(char c);

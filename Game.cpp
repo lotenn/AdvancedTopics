@@ -14,6 +14,66 @@ endGameMessage createEndGameMessage(endGameReason reason, playerEnum winner){
     return createEndGameMessage(reason, winner, -1, -1);
 }
 
+bool isNumInRange(char* str, int rangeStart, int rangeEnd) {
+    if (str == NULL || strlen(str)==0) {
+        return false;
+    }
+    int n = strlen(str);
+    for (int i = 0; i < n; i++) {
+        //not valid digits
+        if (!('0' <= str[i] && str[i] <= '9')) return false;
+    }
+    //str in a number
+    int num = atoi(str);
+
+    return (num >= rangeStart && num <= rangeEnd);
+}
+
+bool isValidToolType(char tool){
+    switch (tool) {
+        case 'R':
+        case 'P':
+        case 'S':
+        case 'B':
+        case 'F':
+        case 'J':
+            return true;
+        default:
+            return false;
+    }
+}
+
+bool isCharArrValidToolType(char *c) {
+    if(c == NULL) return false;
+    if(strlen(c)==1){
+        char tool = *c;
+        return isValidToolType(tool);
+    }
+    return false;
+}
+
+bool isValidJokerToolType(char tool){
+    switch (tool) {
+        case 'R':
+        case 'P':
+        case 'S':
+        case 'B':
+            return true;
+        default:
+            return false;
+    }
+}
+
+bool isCharArrValidJokerToolType(char *c) {
+    if(c == NULL) return false;
+    if(strlen(c)==1){
+        char tool = *c;
+        return isValidJokerToolType(tool);
+    }
+    return false;
+}
+
+
 Game::Game():emptyTool(new EmptyTool(NO_PLAYER)), player1Score(0), player2Score(0), currentPlayer(PLAYER_1){
     player1Tools.reserve(NUM_OF_TOOLS);
     player2Tools.reserve(NUM_OF_TOOLS);
@@ -213,6 +273,12 @@ endGameMessage Game::checkGameWinner(){
     else {return createEndGameMessage(NO_WINNER, NO_PLAYER);}
 }
 
+void Game::raisePlayerScore(int score, playerEnum player){
+    if(player == PLAYER_1) this->player1Score+=score;
+    else this->player2Score+=score;
+}
+
+
 toolType charToToolType(char c) {
     switch (c) {
         case 'R':
@@ -230,15 +296,14 @@ toolType charToToolType(char c) {
     }
 }
 
-//playerEnum getOppositePlayer(playerEnum player){
-//    playerEnum oppositePlayer;
-//    switch(player) {
-//        case PLAYER_2:
-//            oppositePlayer = PLAYER_1;
-//            break;
-//        case PLAYER_1:
-//            oppositePlayer = PLAYER_2;
-//            break;
-//    }
-//    return oppositePlayer;
-//}
+string Game::boardToString(){
+    string str;
+    for (int row = M-1; row >= 0; row--) {
+        for (int col = 0; col < N; col++){
+            str+= this->gameBoard[row][col]->toChar();
+        }
+        str+="\n";
+    }
+    return str;
+}
+

@@ -15,17 +15,18 @@ endGameMessage validatePositioningFile(const char* filePath, vector<PositioningC
     PositioningCommand posCmd;
     while(getline(positioningFile, line)){
         posCmd = parser.parsePositioningCommandLine(line);
+        //bad syntax
         if(posCmd.type == INVALID_POSITIONING_COMMAND){
             positioningFile.close();
-            return createEndGameMessage(BAD_POSITIONING_FILE_PLAYER, NO_PLAYER, lineNumber, -1);
+            return createEndGameMessage(BAD_POSITIONING_FILE_SYNTAX, NO_PLAYER, lineNumber, -1);
         }
         Cell cell = posCmd.source;
         int row = getRow(cell), col = getCol(cell);
 
-        //current cell already contains same player's tool
+        //current cell already contains same winner's tool
         if (alreadyPositioned[row][col]){
             positioningFile.close();
-            return createEndGameMessage(BAD_POSITIONING_FILE_PLAYER, NO_PLAYER, lineNumber, -1);
+            return createEndGameMessage(BAD_POSITIONING_FILE_DUPLICATE_CELL_POSITION, NO_PLAYER, lineNumber, -1);
         }
         //regular command
         if(posCmd.type == REGULAR_POSITIONING_COMMAND){
@@ -38,7 +39,7 @@ endGameMessage validatePositioningFile(const char* filePath, vector<PositioningC
             //out of tools
             if(rockCounter<0 || scissorsCounter<0 || paperCounter<0 || flagCounter<0 || bombCounter<0){
                 positioningFile.close();
-                return createEndGameMessage(BAD_POSITIONING_FILE_PLAYER, NO_PLAYER, lineNumber, -1);
+                return createEndGameMessage(BAD_POSITIONING_FILE_TOO_MANY_TOOLS, NO_PLAYER, lineNumber, -1);
             }
         }
         //joker command
@@ -47,7 +48,7 @@ endGameMessage validatePositioningFile(const char* filePath, vector<PositioningC
             //out of tools
             if (jokerCounter<0){
                 positioningFile.close();
-                return createEndGameMessage(BAD_POSITIONING_FILE_PLAYER, NO_PLAYER, lineNumber, -1);}
+                return createEndGameMessage(BAD_POSITIONING_FILE_TOO_MANY_TOOLS, NO_PLAYER, lineNumber, -1);}
         }
         commands.push_back(posCmd);
         alreadyPositioned[row][col] = true;
@@ -56,7 +57,7 @@ endGameMessage validatePositioningFile(const char* filePath, vector<PositioningC
     //not enough flags positioned
     if(flagCounter!=0){
         positioningFile.close();
-        return createEndGameMessage(BAD_POSITIONING_FILE_PLAYER, NO_PLAYER, lineNumber, -1);
+        return createEndGameMessage(BAD_POSITIONING_FILE_NOT_ENOUGH_FLAGS, NO_PLAYER, lineNumber, -1);
     }
     positioningFile.close();
     return createEndGameMessage(NO_WINNER, NO_PLAYER);
@@ -84,13 +85,3 @@ endGameMessage validateMoveFile(const char *filePath, vector<Command> &commands)
     return createEndGameMessage(NO_WINNER, NO_PLAYER);
 }
 
-void printBoard(ofstream& outputFile, Game& game) {
-    if(outputFile.is_open()){
-        for (int row = M-1; row >= 0; row--) {
-            for (int col = 0; col < N; col++){
-                outputFile << game.gameBoard[row][col]->toChar();
-            }
-            outputFile << endl;
-        }
-    }
-}

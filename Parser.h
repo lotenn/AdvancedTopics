@@ -5,7 +5,7 @@
 #include <string>
 #include <string.h>
 #include "Command.h"
-#include "MainAux.h"
+#include "Game.h"
 
 using namespace std;
 

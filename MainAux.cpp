@@ -1,61 +1,43 @@
 #include "MainAux.h"
 
-bool isNumInRange(char* str, int rangeStart, int rangeEnd) {
-	if (str == NULL || strlen(str)==0) {
-		return false;
-	}
-	int n = strlen(str);
-	for (int i = 0; i < n; i++) {
-		//not valid digits 
-		if (!('0' <= str[i] && str[i] <= '9')) return false;
-	}
-	//str in a number
-	int num = atoi(str);
-	
-	return (num >= rangeStart && num <= rangeEnd);
-}
-
-bool isValidToolType(char tool){
-    switch (tool) {
-        case 'R':
-        case 'P':
-        case 'S':
-        case 'B':
-        case 'F':
-        case 'J':
-            return true;
-        default:
-            return false;
+endGameMessage initializeGame(Game game, const char* filePath_player1, const char* filePath_player2){
+    vector<PositioningCommand> posCommandsPlayer1;
+    vector<PositioningCommand> posCommandsPlayer2;
+    endGameMessage player1Msg = validatePositioningFile(filePath_player1, posCommandsPlayer1);
+    //PLAYER1 has no positioning file
+    if(player1Msg.reason == NO_POSITIONING_FILE) {
+        player1Msg.winner = PLAYER_1;
+        return player1Msg;
     }
-}
-
-bool isCharArrValidToolType(char *c) {
-    if(c == NULL) return false;
-    if(strlen(c)==1){
-        char tool = *c;
-        return isValidToolType(tool);
+    //PLAYER 2 has no positioning file
+    endGameMessage player2Msg = validatePositioningFile(filePath_player2, posCommandsPlayer2);
+    if(player2Msg.reason == NO_POSITIONING_FILE){
+        player2Msg.winner = PLAYER_2;
+        return player2Msg;
     }
-    return false;
-}
-
-bool isValidJokerToolType(char tool){
-    switch (tool) {
-        case 'R':
-        case 'P':
-        case 'S':
-        case 'B':
-            return true;
-        default:
-            return false;
+    //draw
+    if(player1Msg.reason!=NO_WINNER && player2Msg.reason!=NO_WINNER){
+        return createEndGameMessage
+                (DRAW_POSITIONING_FILE_BOTH_PLAYERS, NO_PLAYER, player1Msg.errorLine1, player2Msg.errorLine1);
     }
-}
-
-bool isCharArrValidJokerToolType(char *c) {
-    if(c == NULL) return false;
-    if(strlen(c)==1){
-        char tool = *c;
-        return isValidJokerToolType(tool);
+    //player 1 has lost due to bad position file
+    else if(player1Msg.reason != NO_WINNER){
+        game.raisePlayerScore(1, PLAYER_2);
+        player1Msg.winner = PLAYER_2;
+        return player1Msg;
     }
-    return false;
+    //player 2 has lost due to bad position file
+    else if(player2Msg.reason != NO_WINNER){
+        game.raisePlayerScore(1, PLAYER_1);
+        player2Msg.winner = PLAYER_1;
+        return player2Msg;
+    }
+    //no file problems, placing tool as specified
+    else{
+        game.setPlayerTools(posCommandsPlayer1, PLAYER_1);
+        game.setPlayerTools(posCommandsPlayer1, PLAYER_2);
+        return game.checkGameWinner();
+    }
+
 }
 
