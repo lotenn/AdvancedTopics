@@ -296,6 +296,7 @@ public:
 	Game();
 	~Game();
 	void setPlayerTools(const vector<PositioningCommand> &commands, playerEnum player);
+    void resetGameBoard();
 	executeCommandMessage playTurn(Command cmd, playerEnum player);
 	playerEnum getCurrentPlayer(){return currentPlayer;}
 	void setCurrentPlayer(playerEnum player);
