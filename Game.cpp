@@ -1,3 +1,4 @@
+#include <map>
 #include "Game.h"
 
 playerEnum getOpposite(playerEnum player){
@@ -12,53 +13,49 @@ playerEnum getOpposite(playerEnum player){
 }
 
 const string toString(playerEnum player){
-    const string toString[] = {"player 1", "player 2", "no player"};
-    return toString[player];
+    map<playerEnum , string> strings;
+    strings[PLAYER_1] = "player 1";
+    strings[PLAYER_2] = "player 2";
+    strings[NO_PLAYER] = "no player";
+    auto str = strings.find(player);
+    return str != strings.end() ? str->second : "";
 }
 
 const string getWinnerString(playerEnum player){
-    const string getWinner[] = {"1", "2", "0"};
-    return getWinner[player];
+    map<playerEnum , string> winner;
+    winner[PLAYER_1] = "1";
+    winner[PLAYER_2] = "2";
+    winner[NO_PLAYER] = "0";
+    auto str = winner.find(player);
+    return str != winner.end() ? str->second : "";
 }
 
 const string getBadInputFileMessage(endGameReason reason){
-    const string getMessage[] = {
-        "", //NO_WINNER
-        "", //NO_MORE_FLAGS
-        "", //NO_MOVING_TOOLS
-        "", //NO_POSITIONING_FILE
-        "wrong positioning file syntax" , //BAD_POSITIONING_FILE_SYNTAX
-        "not enough flags in the positioning file", //BAD_POSITIONING_FILE_NOT_ENOUGH_FLAGS
-        "too many tools in positioning file", //BAD_POSITIONING_FILE_TOO_MANY_TOOLS
-        "2 tools located in the same cell in the positioning file", //BAD_POSITIONING_FILE_DUPLICATE_CELL_POSITION
-        "", //NO_MOVE_FILE
-        "", //BAD_MOVE_FILE_PLAYER
-        "", //DRAW_NO_MORE_MOVES
-        "", //DRAW_POSITIONING_ENDED_WITH_NO_FLAGS
-        "", //DRAW_POSITIONING_ENDED_WITH_NO_MOVING_TOOLS
-        "" //DRAW_POSITIONING_FILE_BOTH_PLAYERS
-    };
-    return getMessage[reason];
+    map<endGameReason, string> messages;
+    messages[BAD_POSITIONING_FILE_SYNTAX] = "wrong positioning file syntax";
+    messages[BAD_POSITIONING_FILE_NOT_ENOUGH_FLAGS] = "not enough flags in the positioning file";
+    messages[BAD_POSITIONING_FILE_TOO_MANY_TOOLS] = "too many tools in positioning file";
+    messages[BAD_POSITIONING_FILE_DUPLICATE_CELL_POSITION] = "2 tools located in the same cell in the positioning file";
+    auto str = messages.find(reason);
+    return str != messages.end() ? str->second : "";
 }
 
 const string getReasonString(endGameMessage endGameMsg){
-    const string getReason[] = {
-        "", //NO_WINNER
-        "All flags of the opponent are captured", //NO_MORE_FLAGS
-        "All moving PIECEs of the opponent are eaten", //NO_MOVING_TOOLS
-        "", //NO_POSITIONING_FILE
-        "Bad Positioning input file for player "+toString(getOpposite(endGameMsg.winner))+" - line "+to_string(endGameMsg.errorLine1), //BAD_POSITIONING_FILE_SYNTAX
-        "Bad Positioning input file for player "+toString(getOpposite(endGameMsg.winner))+" - line "+to_string(endGameMsg.errorLine1), //BAD_POSITIONING_FILE_NOT_ENOUGH_FLAGS
-        "Bad Positioning input file for player "+toString(getOpposite(endGameMsg.winner))+" - line "+to_string(endGameMsg.errorLine1), //BAD_POSITIONING_FILE_TOO_MANY_TOOLS
-        "Bad Positioning input file for player "+toString(getOpposite(endGameMsg.winner))+" - line "+to_string(endGameMsg.errorLine1), //BAD_POSITIONING_FILE_DUPLICATE_CELL_POSITION
-        "", //NO_MOVE_FILE
-        "Bad Moves input file for player "+toString(getOpposite(endGameMsg.winner))+" - line "+to_string(endGameMsg.errorLine1), //BAD_MOVE_FILE_PLAYER
-        "A tie - both Moves input files done without a winner", //DRAW_NO_MORE_MOVES
-        "A tie - all flags are eaten by both players in the position files", //DRAW_POSITIONING_ENDED_WITH_NO_FLAGS
-        "A tie - moving PIECEs are eaten by both players in the position files", //DRAW_POSITIONING_ENDED_WITH_NO_MOVING_TOOLS
-        "Bad Positioning input file for both players - player 1: line "+to_string(endGameMsg.errorLine1)+", player 2: line "+to_string(endGameMsg.errorLine2) //DRAW_POSITIONING_FILE_BOTH_PLAYERS
-    };
-    return getReason[endGameMsg.reason];
+    map<endGameReason, string> reasons;
+    reasons[NO_MORE_FLAGS] = "All flags of the opponent are captured";
+    reasons[NO_MOVING_TOOLS] = "All moving PIECEs of the opponent are eaten";
+    reasons[BAD_POSITIONING_FILE_SYNTAX] = "Bad Positioning input file for player "+toString(getOpposite(endGameMsg.winner))+" - line "+to_string(endGameMsg.errorLine1);
+    reasons[BAD_POSITIONING_FILE_NOT_ENOUGH_FLAGS] = "Bad Positioning input file for player "+toString(getOpposite(endGameMsg.winner))+" - line "+to_string(endGameMsg.errorLine1);
+    reasons[BAD_POSITIONING_FILE_TOO_MANY_TOOLS] = "Bad Positioning input file for player "+toString(getOpposite(endGameMsg.winner))+" - line "+to_string(endGameMsg.errorLine1);
+    reasons[BAD_POSITIONING_FILE_DUPLICATE_CELL_POSITION] = "Bad Positioning input file for player "+toString(getOpposite(endGameMsg.winner))+" - line "+to_string(endGameMsg.errorLine1);
+    reasons[BAD_MOVE_FILE_PLAYER] = "Bad Moves input file for player "+toString(getOpposite(endGameMsg.winner))+" - line "+to_string(endGameMsg.errorLine1);
+    reasons[DRAW_NO_MORE_MOVES] = "A tie - both Moves input files done without a winner";
+    reasons[DRAW_POSITIONING_ENDED_WITH_NO_FLAGS] = "A tie - all flags are eaten by both players in the position files";
+    reasons[DRAW_POSITIONING_ENDED_WITH_NO_MOVING_TOOLS] = "A tie - moving PIECEs are eaten by both players in the position files";
+    reasons[DRAW_POSITIONING_FILE_BOTH_PLAYERS] = "Bad Positioning input file for both players - player 1: line "+to_string(endGameMsg.errorLine1)+", player 2: line "+to_string(endGameMsg.errorLine2);
+
+    auto str = reasons.find(endGameMsg.reason);
+    return str != reasons.end() ? str->second : "";
 }
 
 endGameMessage createEndGameMessage(endGameReason reason, playerEnum winner, int _errorLine1, int _errorLine2){
