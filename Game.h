@@ -7,6 +7,7 @@
 #include <string>
 
 using namespace std;
+
 #define M 10
 #define N 10
 #define NUM_OF_R 2
@@ -18,11 +19,13 @@ using namespace std;
 #define NUM_OF_TOOLS (NUM_OF_B + NUM_OF_F + NUM_OF_J + NUM_OF_P + NUM_OF_R + NUM_OF_S)
 
 enum playerEnum {
-	PLAYER_1,
-	PLAYER_2,
-	NO_PLAYER,
-    DRAW
+	PLAYER_1 = 0,
+	PLAYER_2 = 1,
+	NO_PLAYER = 2
 };
+
+const string toString(playerEnum player);
+const string getWinnerString(playerEnum player);
 
 enum toolType {
 	ROCK ,
@@ -34,26 +37,28 @@ enum toolType {
 };
 
 enum executeCommandMessage{
-	EXECUTE_COMMNAND_SUCCESS = 0,
-	EXECUTE_COMMNAND_ILLEGAL = 1
+	EXECUTE_COMMAND_SUCCESS = 0,
+	EXECUTE_COMMAND_ILLEGAL = 1
 };
 
 enum endGameReason{
-    NO_WINNER,
-    NO_MORE_FLAGS,
-    NO_MOVING_TOOLS,
-	NO_POSITIONING_FILE,
-    BAD_POSITIONING_FILE_SYNTAX,
-	BAD_POSITIONING_FILE_NOT_ENOUGH_FLAGS,
-	BAD_POSITIONING_FILE_TOO_MANY_TOOLS,
-	BAD_POSITIONING_FILE_DUPLICATE_CELL_POSITION,
-	NO_MOVE_FILE,
-	BAD_MOVE_FILE_PLAYER,
-    DRAW_NO_MORE_MOVES,
-    DRAW_POSITIONING_ENDED_WITH_NO_FLAGS,
-	DRAW_POSITIONING_ENDED_WITH_NO_MOVING_TOOLS,
-    DRAW_POSITIONING_FILE_BOTH_PLAYERS
+    NO_WINNER = 0,
+    NO_MORE_FLAGS = 1,
+    NO_MOVING_TOOLS = 2,
+	NO_POSITIONING_FILE = 3,
+    BAD_POSITIONING_FILE_SYNTAX = 4,
+	BAD_POSITIONING_FILE_NOT_ENOUGH_FLAGS = 5,
+	BAD_POSITIONING_FILE_TOO_MANY_TOOLS = 6,
+	BAD_POSITIONING_FILE_DUPLICATE_CELL_POSITION = 7,
+	NO_MOVE_FILE = 8,
+	BAD_MOVE_FILE_PLAYER = 9,
+    DRAW_NO_MORE_MOVES = 10,
+    DRAW_POSITIONING_ENDED_WITH_NO_FLAGS = 11,
+	DRAW_POSITIONING_ENDED_WITH_NO_MOVING_TOOLS = 12,
+    DRAW_POSITIONING_FILE_BOTH_PLAYERS = 13
 };
+
+const string getBadInputFileMessage(endGameReason reason);
 
 struct endGameMessage{
     endGameReason reason;
@@ -61,6 +66,9 @@ struct endGameMessage{
     int errorLine1;
     int errorLine2;
 };
+
+const string getReasonString(endGameMessage);
+
 endGameMessage createEndGameMessage(endGameReason reason, playerEnum winner, int _errorLine1, int _errorLine2);
 
 endGameMessage createEndGameMessage(endGameReason reason, playerEnum winner);
@@ -106,9 +114,9 @@ public:
     executeCommandMessage setJoker(toolType joker_new_rep){
         if(this->isJoker()){
             this->type = joker_new_rep;
-			return EXECUTE_COMMNAND_SUCCESS;
+			return EXECUTE_COMMAND_SUCCESS;
         }
-        return EXECUTE_COMMNAND_ILLEGAL;
+        return EXECUTE_COMMAND_ILLEGAL;
     }
     void placeTool(){this->isPositioned = true;}
     virtual void removeTool(){this->isPositioned = false;}

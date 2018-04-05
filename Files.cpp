@@ -85,3 +85,14 @@ endGameMessage validateMoveFile(const char *filePath, vector<Command> &commands)
     return createEndGameMessage(NO_WINNER, NO_PLAYER);
 }
 
+void generateOutputFile(const char *outputFilePath, string winner, string reason, string board){
+    ofstream outputFile;
+    //todo: check if the file is opened properly
+    outputFile.open(outputFilePath);
+    outputFile << "Winner: " << winner << endl;
+    outputFile << "Reason: " << reason << endl;
+    outputFile << endl;
+    outputFile << board << endl;
+    outputFile.close();
+}
+

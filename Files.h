@@ -10,4 +10,6 @@ endGameMessage validatePositioningFile(const char* filePath, vector<PositioningC
 
 endGameMessage validateMoveFile(const char *filePath, vector<Command> &commands);
 
+void generateOutputFile(const char *outputFilePath, string winner, string reason, string board);
+
 #endif //EX1_FILES_H

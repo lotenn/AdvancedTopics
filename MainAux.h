@@ -7,8 +7,14 @@
 
 using namespace std;
 
-endGameMessage initializeGame(Game game, const char* filePath_player1, const char* filePath_player2);
+endGameMessage initializeGame(Game& game, const char* filePath_player1, const char* filePath_player2);
 
-void printBadPositionMessage(endGameMessage endGameMsg);
+void printNoPositioningFile(endGameMessage endGameMsg);
+
+bool badInputFile(endGameReason reason);
+
+void printBadInputFile(endGameReason reason, playerEnum player);
+
+void endGame(Game& game, endGameMessage endGameMsg, const char* outputFilePath);
 
 #endif //EX1_MAINAUX_H
