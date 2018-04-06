@@ -11,6 +11,8 @@ endGameMessage initializeGame(Game& game, const char* filePath_player1, const ch
 
 void printNoPositioningFile(endGameMessage endGameMsg);
 
+void printNoMoveFile(endGameMessage endGameMsg);
+
 bool badInputFile(endGameReason reason);
 
 void printBadInputFile(endGameReason reason, playerEnum player);

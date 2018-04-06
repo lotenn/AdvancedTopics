@@ -99,12 +99,17 @@ endGameMessage playGame(Game& game, const char* filePath_player1, const char* fi
 
 bool badInputFile(endGameReason reason){
     return (reason == BAD_POSITIONING_FILE_INVALID || reason == BAD_POSITIONING_FILE_NOT_ENOUGH_FLAGS ||
-            reason == BAD_POSITIONING_FILE_TOO_MANY_TOOLS ||
-       reason == BAD_POSITIONING_FILE_DUPLICATE_CELL_POSITION);
+            reason == BAD_POSITIONING_FILE_TOO_MANY_TOOLS || reason == BAD_POSITIONING_FILE_DUPLICATE_CELL_POSITION ||
+            reason == BAD_MOVE_FILE_NOT_YOUR_TOOL || reason == BAD_MOVE_FILE_TOOL_CANT_MOVE ||
+            reason == BAD_MOVE_FILE_CELL_OCCUPIED || reason == BAD_MOVE_FILE_NOT_JOKER || reason == BAD_MOVE_FILE_INVALID);
 }
 
 void printNoPositioningFile(endGameMessage endGameMsg){
     cout << "No Positioning input file for " << toString(endGameMsg.winner) << endl;
+}
+
+void printNoMoveFile(endGameMessage endGameMsg){
+    cout << "No Moves input file for " << toString(endGameMsg.winner) << endl;
 }
 
 void printBadInputFile(endGameReason reason, playerEnum player){
@@ -118,11 +123,13 @@ void endGame(Game& game, endGameMessage endGameMsg, const char* outputFilePath){
         return;
     }
     else if(endGameMsg.reason == NO_MOVE_FILE){
-        //printNoMoveFile(endGameMsg);
+        printNoMoveFile(endGameMsg);
         return;
     }
     else{
         game.raisePlayerScore(1, endGameMsg.winner);
+        if(badInputFile(endGameMsg.reason))
+            printBadInputFile(endGameMsg.reason, getOpposite(endGameMsg.winner));
         string winner, reason, board;
         winner = getWinnerString(endGameMsg.winner);
         reason = getReasonString(endGameMsg);

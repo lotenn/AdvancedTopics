@@ -384,7 +384,6 @@ void Game::raisePlayerScore(int score, playerEnum player){
     else if(player == PLAYER_2) this->player2Score+=score;
 }
 
-
 toolType charToToolType(char c) {
     switch (c) {
         case 'R':

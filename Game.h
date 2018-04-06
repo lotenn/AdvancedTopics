@@ -1,10 +1,10 @@
 #ifndef EX1_GAME_H
 #define EX1_GAME_H
 
-#include <vector>
 #include "Command.h"
 #include <string.h>
 #include <string>
+#include <vector>
 
 using namespace std;
 
@@ -26,6 +26,7 @@ enum playerEnum {
 
 string toString(playerEnum player);
 string getWinnerString(playerEnum player);
+playerEnum getOpposite(playerEnum player);
 
 enum toolType {
 	ROCK ,
@@ -35,6 +36,8 @@ enum toolType {
 	FLAG,
 	EMPTY,
 };
+
+toolType charToToolType(char c);
 
 enum executeCommandMessage{
 	EXECUTE_COMMAND_SUCCESS,
@@ -105,7 +108,7 @@ public:
 			type(_type),
 			player(_player),
 			joker(_joker),
-			isPositioned(_isPositioned = false){}
+			isPositioned(_isPositioned){}
 
 	Tool(toolType _type, playerEnum _player, bool _joker):
 			type(_type),
@@ -297,10 +300,7 @@ public:
 	}
 };
 
-
-
-class Game
-{
+class Game {
 private:
 	Tool* gameBoard[N][M];
 	Tool* emptyTool;
@@ -325,14 +325,7 @@ public:
     endGameReason playerHasLost(vector<Tool*> playerTools);
     endGameMessage checkGameWinner();
     void raisePlayerScore(int score, playerEnum player);
-
-	//testing
-    void updateCell(Cell cell, Tool *tool){
-        this->gameBoard[getRow(cell)][getCol(cell)] = tool;
-    }
 	string boardToString();
-
 };
-toolType charToToolType(char c);
 
 #endif //EX1_GAME_H
