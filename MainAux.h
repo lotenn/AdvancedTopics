@@ -17,4 +17,6 @@ void printBadInputFile(endGameReason reason, playerEnum player);
 
 void endGame(Game& game, endGameMessage endGameMsg, const char* outputFilePath);
 
+endGameMessage playGame(Game& game, const char* filePath_player1, const char* filePath_player2);
+
 #endif //EX1_MAINAUX_H

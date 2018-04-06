@@ -18,7 +18,7 @@ endGameMessage validatePositioningFile(const char* filePath, vector<PositioningC
         //bad syntax
         if(posCmd.type == INVALID_POSITIONING_COMMAND){
             positioningFile.close();
-            return createEndGameMessage(BAD_POSITIONING_FILE_SYNTAX, NO_PLAYER, lineNumber, -1);
+            return createEndGameMessage(BAD_POSITIONING_FILE_INVALID, NO_PLAYER, lineNumber, -1);
         }
         Cell cell = posCmd.source;
         int row = getRow(cell), col = getCol(cell);
@@ -63,23 +63,17 @@ endGameMessage validatePositioningFile(const char* filePath, vector<PositioningC
     return createEndGameMessage(NO_WINNER, NO_PLAYER);
 }
 
-endGameMessage validateMoveFile(const char *filePath, vector<Command> &commands){
+endGameMessage parsingMoveFile(const char *filePath, vector<Command> &commands){
     ifstream movesFile;
     movesFile.open(filePath, ios::in);
     if(!movesFile.is_open()) {return createEndGameMessage(NO_MOVE_FILE, NO_PLAYER);}
 
-    int lineNumber = 1;
     Parser parser;
     string line;
     Command cmd;
     while(getline(movesFile, line)){
         cmd = parser.parseMoveCommand(line);
-        if(cmd.type == INVALID_MOVE_COMMAND){
-            movesFile.close();
-            return createEndGameMessage(BAD_MOVE_FILE_PLAYER, NO_PLAYER, lineNumber, -1);
-        }
         commands.push_back(cmd);
-        lineNumber++;
     }
     movesFile.close();
     return createEndGameMessage(NO_WINNER, NO_PLAYER);

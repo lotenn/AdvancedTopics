@@ -12,9 +12,9 @@ enum positioningCommandType{
 };
 
 enum commandType{
-    MOVE_COMMAND = 0,
-    JOKER_COMMAND = 1,
-	INVALID_MOVE_COMMAND = 2
+    MOVE_COMMAND,
+    JOKER_COMMAND,
+	INVALID_MOVE_COMMAND
 };
 
 struct Command{

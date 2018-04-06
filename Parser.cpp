@@ -29,7 +29,7 @@ Command Parser::parseMoveCommand(string commandLine) {
     }
         //There is a 5th argument (joker command)
     else if (tokens[4] != NULL) {
-        if (!strcmp(tokens[4], "J:") || !isNumInRange(tokens[5], 1, M) || !isNumInRange(tokens[6], 1, N) ||
+        if (strcmp(tokens[4], "J:") || !isNumInRange(tokens[5], 1, M) || !isNumInRange(tokens[6], 1, N) ||
             !isCharArrValidJokerToolType(tokens[7])) {
             free(str);
             return createCommand(INVALID_MOVE_COMMAND, 0, 0, 0, 0, 0, 0, 0);

@@ -12,7 +12,7 @@ playerEnum getOpposite(playerEnum player){
     }
 }
 
-const string toString(playerEnum player){
+string toString(playerEnum player){
     map<playerEnum , string> strings;
     strings[PLAYER_1] = "player 1";
     strings[PLAYER_2] = "player 2";
@@ -21,7 +21,7 @@ const string toString(playerEnum player){
     return str != strings.end() ? str->second : "";
 }
 
-const string getWinnerString(playerEnum player){
+string getWinnerString(playerEnum player){
     map<playerEnum , string> winner;
     winner[PLAYER_1] = "1";
     winner[PLAYER_2] = "2";
@@ -30,25 +30,49 @@ const string getWinnerString(playerEnum player){
     return str != winner.end() ? str->second : "";
 }
 
-const string getBadInputFileMessage(endGameReason reason){
+endGameReason toReason(executeCommandMessage msg){
+    switch(msg){
+        case EXECUTE_COMMAND_NOT_YOUR_TOOL:
+            return BAD_MOVE_FILE_NOT_YOUR_TOOL;
+        case EXECUTE_COMMAND_TOOL_CANT_MOVE:
+            return BAD_MOVE_FILE_TOOL_CANT_MOVE;
+        case EXECUTE_COMMAND_CELL_OCCUPIED:
+            return BAD_MOVE_FILE_CELL_OCCUPIED;
+        case EXECUTE_COMMAND_NOT_JOKER:
+            return BAD_MOVE_FILE_NOT_JOKER;
+        default:
+            return BAD_MOVE_FILE_INVALID;
+    }
+}
+
+string getBadInputFileMessage(endGameReason reason){
     map<endGameReason, string> messages;
-    messages[BAD_POSITIONING_FILE_SYNTAX] = "wrong positioning file syntax";
+    messages[BAD_POSITIONING_FILE_INVALID] = "invalid positioning file line";
     messages[BAD_POSITIONING_FILE_NOT_ENOUGH_FLAGS] = "not enough flags in the positioning file";
     messages[BAD_POSITIONING_FILE_TOO_MANY_TOOLS] = "too many tools in positioning file";
     messages[BAD_POSITIONING_FILE_DUPLICATE_CELL_POSITION] = "2 tools located in the same cell in the positioning file";
+    messages[BAD_MOVE_FILE_NOT_YOUR_TOOL] = "trying to preform a move on a cell that doesn't contain player tool";
+    messages[BAD_MOVE_FILE_TOOL_CANT_MOVE] = "trying to perform a move with tool that cannot move";
+    messages[BAD_MOVE_FILE_CELL_OCCUPIED] = "trying to perform a move with tool to a cell that contains other tool of the player";
+    messages[BAD_MOVE_FILE_NOT_JOKER] = "trying to change type of something different than joker";
+    messages[BAD_MOVE_FILE_INVALID] = "invalid moves file line";
     auto str = messages.find(reason);
     return str != messages.end() ? str->second : "";
 }
 
-const string getReasonString(endGameMessage endGameMsg){
+string getReasonString(endGameMessage endGameMsg){
     map<endGameReason, string> reasons;
     reasons[NO_MORE_FLAGS] = "All flags of the opponent are captured";
     reasons[NO_MOVING_TOOLS] = "All moving PIECEs of the opponent are eaten";
-    reasons[BAD_POSITIONING_FILE_SYNTAX] = "Bad Positioning input file for player "+toString(getOpposite(endGameMsg.winner))+" - line "+to_string(endGameMsg.errorLine1);
-    reasons[BAD_POSITIONING_FILE_NOT_ENOUGH_FLAGS] = "Bad Positioning input file for player "+toString(getOpposite(endGameMsg.winner))+" - line "+to_string(endGameMsg.errorLine1);
-    reasons[BAD_POSITIONING_FILE_TOO_MANY_TOOLS] = "Bad Positioning input file for player "+toString(getOpposite(endGameMsg.winner))+" - line "+to_string(endGameMsg.errorLine1);
-    reasons[BAD_POSITIONING_FILE_DUPLICATE_CELL_POSITION] = "Bad Positioning input file for player "+toString(getOpposite(endGameMsg.winner))+" - line "+to_string(endGameMsg.errorLine1);
-    reasons[BAD_MOVE_FILE_PLAYER] = "Bad Moves input file for player "+toString(getOpposite(endGameMsg.winner))+" - line "+to_string(endGameMsg.errorLine1);
+    reasons[BAD_POSITIONING_FILE_INVALID] = "Bad Positioning input file for "+toString(getOpposite(endGameMsg.winner))+" - line "+to_string(endGameMsg.errorLine1);
+    reasons[BAD_POSITIONING_FILE_NOT_ENOUGH_FLAGS] = "Bad Positioning input file for "+toString(getOpposite(endGameMsg.winner))+" - line "+to_string(endGameMsg.errorLine1);
+    reasons[BAD_POSITIONING_FILE_TOO_MANY_TOOLS] = "Bad Positioning input file for "+toString(getOpposite(endGameMsg.winner))+" - line "+to_string(endGameMsg.errorLine1);
+    reasons[BAD_POSITIONING_FILE_DUPLICATE_CELL_POSITION] = "Bad Positioning input file for "+toString(getOpposite(endGameMsg.winner))+" - line "+to_string(endGameMsg.errorLine1);
+    reasons[BAD_MOVE_FILE_INVALID] = "Bad Moves input file for "+toString(getOpposite(endGameMsg.winner))+" - line "+to_string(endGameMsg.errorLine1);
+    reasons[BAD_MOVE_FILE_NOT_YOUR_TOOL] = "Bad Moves input file for "+toString(getOpposite(endGameMsg.winner))+" - line "+to_string(endGameMsg.errorLine1);
+    reasons[BAD_MOVE_FILE_TOOL_CANT_MOVE] = "Bad Moves input file for "+toString(getOpposite(endGameMsg.winner))+" - line "+to_string(endGameMsg.errorLine1);
+    reasons[BAD_MOVE_FILE_CELL_OCCUPIED] = "Bad Moves input file for "+toString(getOpposite(endGameMsg.winner))+" - line "+to_string(endGameMsg.errorLine1);
+    reasons[BAD_MOVE_FILE_NOT_JOKER] = "Bad Moves input file for "+toString(getOpposite(endGameMsg.winner))+" - line "+to_string(endGameMsg.errorLine1);
     reasons[DRAW_NO_MORE_MOVES] = "A tie - both Moves input files done without a winner";
     reasons[DRAW_POSITIONING_ENDED_WITH_NO_FLAGS] = "A tie - all flags are eaten by both players in the position files";
     reasons[DRAW_POSITIONING_ENDED_WITH_NO_MOVING_TOOLS] = "A tie - moving PIECEs are eaten by both players in the position files";
@@ -130,7 +154,6 @@ bool isCharArrValidJokerToolType(char *c) {
     }
     return false;
 }
-
 
 Game::Game():emptyTool(new EmptyTool(NO_PLAYER)), player1Score(0), player2Score(0), currentPlayer(PLAYER_1){
     player1Tools.reserve(NUM_OF_TOOLS);
@@ -283,20 +306,27 @@ executeCommandMessage Game::executeMove(Command cmd){
     Cell source = cmd.source, target = cmd.target;
     int sourceRow = getRow(source), sourceCol = getCol(source), targetRow = getRow(target), targetCol = getCol(target);
     Tool *sourceTool = this->gameBoard[sourceRow][sourceCol], *targetTool = this->gameBoard[targetRow][targetCol];
-    //legal move
-    if(sourceTool->getPlayer() == this->getCurrentPlayer() &&
-    		sourceTool->canMove(source, target) && sourceTool->getPlayer() != targetTool->getPlayer()){
+    //trying to move tool doesn't belong to player
+    if(sourceTool->getPlayer() != this->getCurrentPlayer())
+        return EXECUTE_COMMAND_NOT_YOUR_TOOL;
+    //trying to move tool that cannot move
+    else if(!sourceTool->canMove(source, target))
+        return EXECUTE_COMMAND_TOOL_CANT_MOVE;
+    //move's target cell contain player tool
+    else if(sourceTool->getPlayer() == targetTool->getPlayer())
+        return EXECUTE_COMMAND_CELL_OCCUPIED;
+    //valid move
+    else{
         this->gameBoard[sourceRow][sourceCol] = this->emptyTool;
         this->gameBoard[targetRow][targetCol] = this->battleWinner(sourceTool, targetTool);
         return EXECUTE_COMMAND_SUCCESS;
     }
-    return EXECUTE_COMMAND_ILLEGAL;
 }
 
 executeCommandMessage Game::executeJoker(Command cmd){
     //move command execution
     executeCommandMessage moveMessage = executeMove(cmd);
-    if(moveMessage == EXECUTE_COMMAND_ILLEGAL)
+    if(moveMessage != EXECUTE_COMMAND_SUCCESS)
         return moveMessage;
     //joker command execution
     Cell jokerCell = cmd.joker;
@@ -313,11 +343,9 @@ executeCommandMessage Game::executeCommand(Command cmd){
         case JOKER_COMMAND:
             return executeJoker(cmd);
         default:
-            return EXECUTE_COMMAND_ILLEGAL;
+            return EXECUTE_COMMAND_INVALID;
     }
 }
-
-
 
 endGameReason Game::playerHasLost(vector<Tool*> playerTools){
     int flagsCount=0;
@@ -337,7 +365,7 @@ endGameMessage Game::checkGameWinner(){
     endGameReason player1LossReason = playerHasLost(this->player1Tools);
     endGameReason player2LossReason = playerHasLost(this->player2Tools);
 
-    if(player1LossReason!=NO_WINNER && player2LossReason!=NO_WINNER){
+    if(player1LossReason != NO_WINNER && player2LossReason != NO_WINNER){
         if(player1LossReason == NO_MORE_FLAGS){
             return createEndGameMessage(DRAW_POSITIONING_ENDED_WITH_NO_FLAGS, NO_PLAYER);
         }
@@ -346,8 +374,8 @@ endGameMessage Game::checkGameWinner(){
         }
 
     }
-    else if(player1LossReason!=NO_WINNER) {return createEndGameMessage(player1LossReason, PLAYER_2);}
-    else if(player2LossReason!=NO_WINNER) {return createEndGameMessage(player2LossReason, PLAYER_1);}
+    else if(player1LossReason != NO_WINNER) {return createEndGameMessage(player1LossReason, PLAYER_2);}
+    else if(player2LossReason != NO_WINNER) {return createEndGameMessage(player2LossReason, PLAYER_1);}
     else {return createEndGameMessage(NO_WINNER, NO_PLAYER);}
 }
 
@@ -376,11 +404,11 @@ toolType charToToolType(char c) {
 
 string Game::boardToString(){
     string str;
-    for (int row = M-1; row >= 0; row--) {
-        for (int col = 0; col < N; col++){
+    for (int row = 0; row < N; row++) {
+        for (int col = 0; col < M; col++){
             str+= this->gameBoard[row][col]->toChar();
         }
-        if(row != 0)
+        if(row != N-1)
             str+="\n";
     }
     return str;
