@@ -25,7 +25,9 @@ enum playerEnum {
 };
 
 string toString(playerEnum player);
+
 string getWinnerString(playerEnum player);
+
 playerEnum getOpposite(playerEnum player);
 
 enum toolType {
