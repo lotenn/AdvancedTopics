@@ -1,13 +1,13 @@
 Winner: 2
-Reason: Bad Moves input file for player 1 - line 12
+Reason: All flags of the opponent are captured
 
-          
-    f     
-     b    
-   p      
-      pr  
- r P J R  
-      P   
-   B      
-    F     
-          
+__________
+____f_____
+____Jb____
+__________
+__________
+______p___
+______P___
+___B______
+____r_____
+__________

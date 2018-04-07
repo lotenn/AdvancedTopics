@@ -258,7 +258,7 @@ public:
         return weakerTools;
     }
 	void removeTool() override {}
-    char toChar() const override{return '_';}
+    char toChar() const override{return ' ';}
 };
 
 class JokerTool : public Tool{
@@ -327,11 +327,11 @@ public:
 	~Game();
 	void setPlayerTools(const vector<PositioningCommand> &commands, playerEnum player);
     void resetGameBoard();
-	executeCommandMessage playTurn(Command cmd, playerEnum player);
+	executeCommandMessage playTurn(Command cmd, playerEnum player, bool& lastJoker);
 	playerEnum getCurrentPlayer(){return currentPlayer;}
 	void setCurrentPlayer(playerEnum player);
     Tool* battleWinner(Tool *source, Tool *target);
-	executeCommandMessage executeCommand(Command cmd);
+	executeCommandMessage executeCommand(Command cmd, bool& lastJoker);
     executeCommandMessage executeJoker(Command cmd);
 	executeCommandMessage executeMove(Command cmd);
     endGameReason playerHasLost(vector<Tool*> playerTools);

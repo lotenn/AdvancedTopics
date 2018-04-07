@@ -53,18 +53,23 @@ string getBadInputFileMessage(endGameReason reason){
     messages[BAD_MOVE_FILE_NOT_YOUR_TOOL] = "specified cell does not contain player's tool";
     messages[BAD_MOVE_FILE_TOOL_CANT_MOVE] = "trying to perform an illegal movement with a tool";
     messages[BAD_MOVE_FILE_CELL_OCCUPIED] = "target cell already contains player's tool";
-    messages[BAD_MOVE_FILE_NOT_JOKER] = "cannot change tool types. cell does not contain a joker";
+    messages[BAD_MOVE_FILE_NOT_JOKER] = "cannot change tool type. cell does not contain a joker";
     messages[BAD_MOVE_FILE_INVALID] = "invalid line in Moves input file";
     auto str = messages.find(reason);
     return str != messages.end() ? str->second : "";
 }
 
 string getReasonString(endGameMessage endGameMsg){
+//    if(endGameMsg.mainReason == DRAW_BAD_POSITIONING_FILE_BOTH_PLAYERS &&
+//       (endGameMsg.reason1==BAD_POSITIONING_FILE_NOT_ENOUGH_FLAGS || endGameMsg.reason2==BAD_POSITIONING_FILE_NOT_ENOUGH_FLAGS)){
+//        string str;
+//        str = "Bad Positioning input file for both players
+//    }
     map<endGameReason, string> reasons;
     reasons[NO_MORE_FLAGS] = "All flags of the opponent are captured";
     reasons[NO_MOVING_TOOLS] = "All moving PIECEs of the opponent are eaten";
     reasons[BAD_POSITIONING_FILE_INVALID] = "Bad Positioning input file for "+toString(getOpposite(endGameMsg.winner))+" - line "+to_string(endGameMsg.errorLine1);
-    reasons[BAD_POSITIONING_FILE_NOT_ENOUGH_FLAGS] = "Bad Positioning input file for "+toString(getOpposite(endGameMsg.winner));
+    reasons[BAD_POSITIONING_FILE_NOT_ENOUGH_FLAGS] = "Bad Positioning input file for "+toString(getOpposite(endGameMsg.winner))+" - line "+to_string(endGameMsg.errorLine1);
     reasons[BAD_POSITIONING_FILE_TOO_MANY_TOOLS] = "Bad Positioning input file for "+toString(getOpposite(endGameMsg.winner))+" - line "+to_string(endGameMsg.errorLine1);
     reasons[BAD_POSITIONING_FILE_DUPLICATE_CELL_POSITION] = "Bad Positioning input file for "+toString(getOpposite(endGameMsg.winner))+" - line "+to_string(endGameMsg.errorLine1);
     reasons[BAD_MOVE_FILE_INVALID] = "Bad Moves input file for "+toString(getOpposite(endGameMsg.winner))+" - line "+to_string(endGameMsg.errorLine1);
@@ -266,9 +271,9 @@ void Game::resetGameBoard(){
         tool->removeTool();
 }
 
-executeCommandMessage Game::playTurn(Command cmd, playerEnum player){
+executeCommandMessage Game::playTurn(Command cmd, playerEnum player, bool& lastJoker){
     this->setCurrentPlayer(player);
-    return executeCommand(cmd);
+    return executeCommand(cmd, lastJoker);
 }
 
 void Game::setCurrentPlayer(playerEnum player){
@@ -328,10 +333,10 @@ executeCommandMessage Game::executeMove(Command cmd){
 }
 
 executeCommandMessage Game::executeJoker(Command cmd){
-    //move command execution
-    executeCommandMessage moveMessage = executeMove(cmd);
-    if(moveMessage != EXECUTE_COMMAND_SUCCESS)
-        return moveMessage;
+//    //move command execution
+//    executeCommandMessage moveMessage = executeMove(cmd);
+//    if(moveMessage != EXECUTE_COMMAND_SUCCESS)
+//        return moveMessage;
     //joker command execution
     Cell jokerCell = cmd.joker;
     int jokerRow = getRow(jokerCell), jokerCol = getCol(jokerCell);
@@ -340,13 +345,20 @@ executeCommandMessage Game::executeJoker(Command cmd){
     return jokerTool->setJoker(joker_new_type);
 }
 
-executeCommandMessage Game::executeCommand(Command cmd){
+executeCommandMessage Game::executeCommand(Command cmd, bool& lastJoker){
     switch(cmd.type){
         case MOVE_COMMAND:
+            lastJoker = false;
             return executeMove(cmd);
         case JOKER_COMMAND:
-            return executeJoker(cmd);
+            if(cmd.executionsLeft == 1) {
+                lastJoker = true;
+                return executeJoker(cmd);
+            }
+            lastJoker = false;
+            return executeMove(cmd);
         default:
+            lastJoker = false;
             return EXECUTE_COMMAND_INVALID;
     }
 }

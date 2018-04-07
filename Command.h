@@ -23,9 +23,14 @@ struct Command{
     Cell target;
     Cell joker;
     char new_type;
+	int executionsLeft;
 };
 
 Command createCommand(commandType _type, int srcX, int srcY, int targetX, int targetY, int jokerX, int jokerY, char _new_type);
+
+Command createCommand(commandType _type, int srcX, int srcY, int targetX, int targetY, int jokerX, int jokerY, char _new_type, int _executionsLeft);
+
+
 
 struct PositioningCommand {
 	Cell source;
