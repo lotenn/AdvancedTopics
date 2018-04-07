@@ -327,11 +327,10 @@ public:
 	~Game();
 	void setPlayerTools(const vector<PositioningCommand> &commands, playerEnum player);
     void resetGameBoard();
-	executeCommandMessage playTurn(Command cmd, playerEnum player, bool& lastJoker);
-	playerEnum getCurrentPlayer(){return currentPlayer;}
+	playerEnum getCurrentPlayer(){return this->currentPlayer;}
 	void setCurrentPlayer(playerEnum player);
     Tool* battleWinner(Tool *source, Tool *target);
-	executeCommandMessage executeCommand(Command cmd, bool& lastJoker);
+	executeCommandMessage executeCommand(Command cmd);
     executeCommandMessage executeJoker(Command cmd);
 	executeCommandMessage executeMove(Command cmd);
     endGameReason playerHasLost(vector<Tool*> playerTools);

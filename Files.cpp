@@ -73,7 +73,7 @@ endGameMessage parsingMoveFile(const char *filePath, vector<Command> &commands){
     string line;
     Command cmd;
     while(getline(movesFile, line)){
-        if(line.find_first_not_of(" \t\n\r") == line.npos) continue;
+        if(line.find_first_not_of(" \t\n\r") == line.npos) {continue;}
         cmd = parser.parseMoveCommand(line);
         commands.push_back(cmd);
     }

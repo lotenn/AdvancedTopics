@@ -72,6 +72,12 @@ endGameMessage initializeGame(Game& game, const char* filePath_player1, const ch
     }
 }
 
+
+executeCommandMessage playTurn(Game& game, Command cmd, playerEnum player){
+    game.setCurrentPlayer(player);
+    return game.executeCommand(cmd);
+}
+
 endGameMessage playGame(Game& game, const char* filePath_player1, const char* filePath_player2){
     vector<Command> commandsPlayer1;
     vector<Command> commandsPlayer2;
@@ -88,23 +94,22 @@ endGameMessage playGame(Game& game, const char* filePath_player1, const char* fi
         return player2Msg;
     }
 
-    int player1Move = 0, player2MoveLine = 0;
+    int player1MoveLine = 0, player2MoveLine = 0;
     endGameMessage gameMsg;
     executeCommandMessage moveMsg;
     Command cmd;
-    bool lastJoker;
-    while(player1Move < (int)commandsPlayer1.size() || player2MoveLine < (int)commandsPlayer2.size()){
+    while(player1MoveLine < (int)commandsPlayer1.size() || player2MoveLine < (int)commandsPlayer2.size()){
         //player1 still has moves
-        if(player1Move < (int)commandsPlayer1.size()){
-            cmd = commandsPlayer1[player1Move];
-            player1Move++;
-            for(;cmd.executionsLeft>0; cmd.executionsLeft--){
-                moveMsg = game.playTurn(cmd, PLAYER_1, lastJoker);
+        if(player1MoveLine < (int)commandsPlayer1.size()){
+            cmd = commandsPlayer1[player1MoveLine];
+            player1MoveLine++;
+            for(;cmd.currentStep < (int)cmd.steps.size(); cmd.currentStep++){
+                moveMsg = playTurn(game, cmd, PLAYER_1);
                 //if the move is illegal
                 if(moveMsg != EXECUTE_COMMAND_SUCCESS)
-                    return createEndGameMessage(toReason(moveMsg), PLAYER_2, player1Move, -1);
-                //if the last move wasnt change the joker - check for winner
-                if(!lastJoker){
+                    return createEndGameMessage(toReason(moveMsg), PLAYER_2, player1MoveLine, -1);
+                //if the current step didnt change the joker - check for winner
+                if(cmd.steps[cmd.currentStep] != JOKER_COMMAND){
                     gameMsg = game.checkGameWinner();
                     //the move led to end of the game
                     if(gameMsg.mainReason != NO_WINNER)
@@ -116,14 +121,14 @@ endGameMessage playGame(Game& game, const char* filePath_player1, const char* fi
         if(player2MoveLine < (int)commandsPlayer2.size()) {
             cmd = commandsPlayer2[player2MoveLine];
             player2MoveLine++;
-            for(; cmd.executionsLeft>0; cmd.executionsLeft--){
-                moveMsg = game.playTurn(cmd, PLAYER_2, lastJoker);
+            for(; cmd.currentStep < (int)cmd.steps.size(); cmd.currentStep++){
+                moveMsg = playTurn(game, cmd, PLAYER_2);
                 //if the move is illegal
                 if(moveMsg != EXECUTE_COMMAND_SUCCESS){
                     return createEndGameMessage(toReason(moveMsg), PLAYER_1, player2MoveLine, -1);
                 }
-                //if the last move wasnt change the joker - check for winner
-                if(!lastJoker){
+                //if the current step didnt change the joker - check for winner
+                if(cmd.steps[cmd.currentStep] != JOKER_COMMAND){
                     gameMsg = game.checkGameWinner();
                     //the move led to end of the game
                     if(gameMsg.mainReason != NO_WINNER)

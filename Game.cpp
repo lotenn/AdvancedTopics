@@ -271,10 +271,6 @@ void Game::resetGameBoard(){
         tool->removeTool();
 }
 
-executeCommandMessage Game::playTurn(Command cmd, playerEnum player, bool& lastJoker){
-    this->setCurrentPlayer(player);
-    return executeCommand(cmd, lastJoker);
-}
 
 void Game::setCurrentPlayer(playerEnum player){
     if(player == NO_PLAYER)
@@ -333,10 +329,6 @@ executeCommandMessage Game::executeMove(Command cmd){
 }
 
 executeCommandMessage Game::executeJoker(Command cmd){
-//    //move command execution
-//    executeCommandMessage moveMessage = executeMove(cmd);
-//    if(moveMessage != EXECUTE_COMMAND_SUCCESS)
-//        return moveMessage;
     //joker command execution
     Cell jokerCell = cmd.joker;
     int jokerRow = getRow(jokerCell), jokerCol = getCol(jokerCell);
@@ -345,20 +337,13 @@ executeCommandMessage Game::executeJoker(Command cmd){
     return jokerTool->setJoker(joker_new_type);
 }
 
-executeCommandMessage Game::executeCommand(Command cmd, bool& lastJoker){
-    switch(cmd.type){
+executeCommandMessage Game::executeCommand(Command cmd){
+    switch(cmd.steps[cmd.currentStep]){
         case MOVE_COMMAND:
-            lastJoker = false;
             return executeMove(cmd);
         case JOKER_COMMAND:
-            if(cmd.executionsLeft == 1) {
-                lastJoker = true;
-                return executeJoker(cmd);
-            }
-            lastJoker = false;
-            return executeMove(cmd);
+            return executeJoker(cmd);
         default:
-            lastJoker = false;
             return EXECUTE_COMMAND_INVALID;
     }
 }

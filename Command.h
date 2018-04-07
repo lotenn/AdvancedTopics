@@ -3,7 +3,10 @@
 #define EX1_COMMAND_H
 
 #include <iostream>
+#include <vector>
 #include "Cell.h"
+
+using namespace std;
 
 enum positioningCommandType{
 	INVALID_POSITIONING_COMMAND,
@@ -18,17 +21,17 @@ enum commandType{
 };
 
 struct Command{
-    commandType type;
+	vector<commandType> steps;
+	int currentStep;
     Cell source;
     Cell target;
     Cell joker;
     char new_type;
-	int executionsLeft;
 };
 
-Command createCommand(commandType _type, int srcX, int srcY, int targetX, int targetY, int jokerX, int jokerY, char _new_type);
+Command createCommand(vector<commandType> _steps, int srcX, int srcY, int targetX, int targetY, int jokerX, int jokerY, char _new_type);
 
-Command createCommand(commandType _type, int srcX, int srcY, int targetX, int targetY, int jokerX, int jokerY, char _new_type, int _executionsLeft);
+Command createCommand(vector<commandType> _steps, int _currentStep, int srcX, int srcY, int targetX, int targetY, int jokerX, int jokerY, char _new_type);
 
 
 
