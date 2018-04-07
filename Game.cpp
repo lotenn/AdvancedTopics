@@ -46,7 +46,7 @@ endGameReason toReason(executeCommandMessage msg){
 
 string getBadInputFileMessage(endGameReason reason){
     map<endGameReason, string> messages;
-    messages[BAD_POSITIONING_FILE_INVALID] = "invalid line: Positioning input file";
+    messages[BAD_POSITIONING_FILE_INVALID] = "invalid line in Positioning input file";
     messages[BAD_POSITIONING_FILE_NOT_ENOUGH_FLAGS] = "not enough flags in the positioning input file";
     messages[BAD_POSITIONING_FILE_TOO_MANY_TOOLS] = "too many tools in positioning input file";
     messages[BAD_POSITIONING_FILE_DUPLICATE_CELL_POSITION] = "2 tools located in the same cell in the positioning input file";
@@ -54,7 +54,7 @@ string getBadInputFileMessage(endGameReason reason){
     messages[BAD_MOVE_FILE_TOOL_CANT_MOVE] = "trying to perform an illegal movement with a tool";
     messages[BAD_MOVE_FILE_CELL_OCCUPIED] = "target cell already contains player's tool";
     messages[BAD_MOVE_FILE_NOT_JOKER] = "cannot change tool types. cell does not contain a joker";
-    messages[BAD_MOVE_FILE_INVALID] = "invalid line: Moves input file";
+    messages[BAD_MOVE_FILE_INVALID] = "invalid line in Moves input file";
     auto str = messages.find(reason);
     return str != messages.end() ? str->second : "";
 }
@@ -64,7 +64,7 @@ string getReasonString(endGameMessage endGameMsg){
     reasons[NO_MORE_FLAGS] = "All flags of the opponent are captured";
     reasons[NO_MOVING_TOOLS] = "All moving PIECEs of the opponent are eaten";
     reasons[BAD_POSITIONING_FILE_INVALID] = "Bad Positioning input file for "+toString(getOpposite(endGameMsg.winner))+" - line "+to_string(endGameMsg.errorLine1);
-    reasons[BAD_POSITIONING_FILE_NOT_ENOUGH_FLAGS] = "Bad Positioning input file for "+toString(getOpposite(endGameMsg.winner))+" - line "+to_string(endGameMsg.errorLine1);
+    reasons[BAD_POSITIONING_FILE_NOT_ENOUGH_FLAGS] = "Bad Positioning input file for "+toString(getOpposite(endGameMsg.winner));
     reasons[BAD_POSITIONING_FILE_TOO_MANY_TOOLS] = "Bad Positioning input file for "+toString(getOpposite(endGameMsg.winner))+" - line "+to_string(endGameMsg.errorLine1);
     reasons[BAD_POSITIONING_FILE_DUPLICATE_CELL_POSITION] = "Bad Positioning input file for "+toString(getOpposite(endGameMsg.winner))+" - line "+to_string(endGameMsg.errorLine1);
     reasons[BAD_MOVE_FILE_INVALID] = "Bad Moves input file for "+toString(getOpposite(endGameMsg.winner))+" - line "+to_string(endGameMsg.errorLine1);

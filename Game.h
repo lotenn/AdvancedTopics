@@ -258,7 +258,7 @@ public:
         return weakerTools;
     }
 	void removeTool() override {}
-    char toChar() const override{return ' ';}
+    char toChar() const override{return '_';}
 };
 
 class JokerTool : public Tool{
