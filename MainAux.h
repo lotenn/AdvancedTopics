@@ -15,7 +15,7 @@ void printNoMoveFile(endGameMessage endGameMsg);
 
 bool badInputFile(endGameReason reason);
 
-void printBadInputFile(endGameReason reason, playerEnum player);
+void printBadInputFile(endGameMessage msg);
 
 void endGame(Game& game, endGameMessage endGameMsg, const char* outputFilePath);
 
