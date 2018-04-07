@@ -46,15 +46,15 @@ endGameReason toReason(executeCommandMessage msg){
 
 string getBadInputFileMessage(endGameReason reason){
     map<endGameReason, string> messages;
-    messages[BAD_POSITIONING_FILE_INVALID] = "invalid positioning file line";
-    messages[BAD_POSITIONING_FILE_NOT_ENOUGH_FLAGS] = "not enough flags in the positioning file";
-    messages[BAD_POSITIONING_FILE_TOO_MANY_TOOLS] = "too many tools in positioning file";
-    messages[BAD_POSITIONING_FILE_DUPLICATE_CELL_POSITION] = "2 tools located in the same cell in the positioning file";
-    messages[BAD_MOVE_FILE_NOT_YOUR_TOOL] = "trying to preform a move on a cell that doesn't contain player tool";
+    messages[BAD_POSITIONING_FILE_INVALID] = "invalid line: Positioning input file";
+    messages[BAD_POSITIONING_FILE_NOT_ENOUGH_FLAGS] = "not enough flags in the positioning input file";
+    messages[BAD_POSITIONING_FILE_TOO_MANY_TOOLS] = "too many tools in positioning input file";
+    messages[BAD_POSITIONING_FILE_DUPLICATE_CELL_POSITION] = "2 tools located in the same cell in the positioning input file";
+    messages[BAD_MOVE_FILE_NOT_YOUR_TOOL] = "specified cell does not contain player's tool";
     messages[BAD_MOVE_FILE_TOOL_CANT_MOVE] = "trying to perform an illegal movement with a tool";
-    messages[BAD_MOVE_FILE_CELL_OCCUPIED] = "trying to perform a move with tool to a cell that contains other tool of the player";
-    messages[BAD_MOVE_FILE_NOT_JOKER] = "trying to change type of something different than joker";
-    messages[BAD_MOVE_FILE_INVALID] = "invalid moves file line";
+    messages[BAD_MOVE_FILE_CELL_OCCUPIED] = "target cell already contains player's tool";
+    messages[BAD_MOVE_FILE_NOT_JOKER] = "cannot change tool types. cell does not contain a joker";
+    messages[BAD_MOVE_FILE_INVALID] = "invalid line: Moves input file";
     auto str = messages.find(reason);
     return str != messages.end() ? str->second : "";
 }
