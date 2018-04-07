@@ -1,18 +1,32 @@
 #include "MainAux.h"
 
-void printBadInputFile(endGameReason reason, playerEnum player){
-    string errorMessage = getBadInputFileMessage(reason);
-    cout << "Bad input file: " << errorMessage << " - "+toString(player)<< endl;
+void printBadInputFile(endGameMessage msg){
+    string errorMessage;
+    if(msg.mainReason != DRAW_BAD_POSITIONING_FILE_BOTH_PLAYERS) {
+        errorMessage = getBadInputFileMessage(msg.mainReason);
+        cout << "Bad input file: " << errorMessage << " - " + toString(getOpposite(msg.winner)) << endl;
+    }
+    else{
+        errorMessage = getBadInputFileMessage(msg.reason1);
+        cout << "Bad input file: " << errorMessage << " - " + toString(PLAYER_1) << endl;
+        errorMessage = getBadInputFileMessage(msg.reason2);
+        cout << "Bad input file: " << errorMessage << " - " + toString(PLAYER_2) << endl;
+    }
 }
 
 bool badPositioningFile(endGameReason reason){
     return (reason == BAD_POSITIONING_FILE_INVALID || reason == BAD_POSITIONING_FILE_NOT_ENOUGH_FLAGS ||
-            reason == BAD_POSITIONING_FILE_TOO_MANY_TOOLS || reason == BAD_POSITIONING_FILE_DUPLICATE_CELL_POSITION);
+            reason == BAD_POSITIONING_FILE_TOO_MANY_TOOLS || reason == BAD_POSITIONING_FILE_DUPLICATE_CELL_POSITION ||
+            reason == DRAW_BAD_POSITIONING_FILE_BOTH_PLAYERS);
 }
 
 bool badMovesFile(endGameReason reason){
     return (reason == BAD_MOVE_FILE_NOT_YOUR_TOOL || reason == BAD_MOVE_FILE_TOOL_CANT_MOVE ||
             reason == BAD_MOVE_FILE_CELL_OCCUPIED || reason == BAD_MOVE_FILE_NOT_JOKER || reason == BAD_MOVE_FILE_INVALID);
+}
+
+bool badInputFile(endGameReason reason){
+    return (badPositioningFile(reason) || badMovesFile(reason));
 }
 
 endGameMessage initializeGame(Game& game, const char* filePath_player1, const char* filePath_player2){
@@ -32,16 +46,11 @@ endGameMessage initializeGame(Game& game, const char* filePath_player1, const ch
         return player2Msg;
     }
 
-    //bad input error printing
-    if(badPositioningFile(player1Msg.mainReason))
-        printBadInputFile(player1Msg.mainReason, PLAYER_1);
-    if(badPositioningFile(player2Msg.mainReason))
-        printBadInputFile(player2Msg.mainReason, PLAYER_2);
-
     //draw
     if(player1Msg.mainReason != NO_WINNER && player2Msg.mainReason != NO_WINNER){
         return createEndGameMessage
-                (DRAW_POSITIONING_FILE_BOTH_PLAYERS, NO_PLAYER, player1Msg.errorLine1, player2Msg.errorLine1);
+                (DRAW_BAD_POSITIONING_FILE_BOTH_PLAYERS, player1Msg.mainReason, player2Msg.mainReason,
+                 NO_PLAYER, player1Msg.errorLine1, player2Msg.errorLine1);
     }
     //player 1 has lost due to bad position file
     else if(player1Msg.mainReason != NO_WINNER){
@@ -129,8 +138,8 @@ void endGame(Game& game, endGameMessage endGameMsg, const char* outputFilePath){
     }
     else{
         game.raisePlayerScore(1, endGameMsg.winner);
-        if(badMovesFile(endGameMsg.mainReason))
-            printBadInputFile(endGameMsg.mainReason, getOpposite(endGameMsg.winner));
+        if(badInputFile(endGameMsg.mainReason))
+            printBadInputFile(endGameMsg);
         string winner, reason, board;
         winner = getWinnerString(endGameMsg.winner);
         reason = getReasonString(endGameMsg);

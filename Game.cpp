@@ -75,7 +75,7 @@ string getReasonString(endGameMessage endGameMsg){
     reasons[DRAW_NO_MORE_MOVES] = "A tie - both Moves input files done without a winner";
     reasons[DRAW_POSITIONING_ENDED_WITH_NO_FLAGS] = "A tie - all flags are eaten by both players in the position files";
     reasons[DRAW_POSITIONING_ENDED_WITH_NO_MOVING_TOOLS] = "A tie - moving PIECEs are eaten by both players in the position files";
-    reasons[DRAW_POSITIONING_FILE_BOTH_PLAYERS] = "Bad Positioning input file for both players - player 1: line "+to_string(endGameMsg.errorLine1)+", player 2: line "+to_string(endGameMsg.errorLine2);
+    reasons[DRAW_BAD_POSITIONING_FILE_BOTH_PLAYERS] = "Bad Positioning input file for both players - player 1: line "+to_string(endGameMsg.errorLine1)+", player 2: line "+to_string(endGameMsg.errorLine2);
 
     auto str = reasons.find(endGameMsg.mainReason);
     return str != reasons.end() ? str->second : "";
