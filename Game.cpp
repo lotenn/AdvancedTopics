@@ -52,7 +52,7 @@ string getBadInputFileMessage(endGameReason reason){
     messages[BAD_POSITIONING_FILE_TOO_MANY_TOOLS] = "too many tools in positioning file";
     messages[BAD_POSITIONING_FILE_DUPLICATE_CELL_POSITION] = "2 tools located in the same cell in the positioning file";
     messages[BAD_MOVE_FILE_NOT_YOUR_TOOL] = "trying to preform a move on a cell that doesn't contain player tool";
-    messages[BAD_MOVE_FILE_TOOL_CANT_MOVE] = "trying to perform a move with tool that cannot move";
+    messages[BAD_MOVE_FILE_TOOL_CANT_MOVE] = "trying to perform an illegal movement with a tool";
     messages[BAD_MOVE_FILE_CELL_OCCUPIED] = "trying to perform a move with tool to a cell that contains other tool of the player";
     messages[BAD_MOVE_FILE_NOT_JOKER] = "trying to change type of something different than joker";
     messages[BAD_MOVE_FILE_INVALID] = "invalid moves file line";

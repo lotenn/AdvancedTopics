@@ -78,27 +78,20 @@ endGameMessage playGame(Game& game, const char* filePath_player1, const char* fi
     }
 
     int player1MoveLine = 0, player2MoveLine = 0;
-    endGameMessage gameMsg = createEndGameMessage(NO_WINNER, NO_PLAYER);
+    endGameMessage gameMsg;
     executeCommandMessage moveMsg;
-    while(gameMsg.reason == NO_WINNER){
-        //both players have no more moves
-        if(!(player1MoveLine < (int)commandsPlayer1.size()) && !(player2MoveLine < (int)commandsPlayer2.size())){
-            gameMsg = createEndGameMessage(DRAW_NO_MORE_MOVES, NO_PLAYER);
-            break;
-        }
+    while(player1MoveLine < (int)commandsPlayer1.size() || player2MoveLine < (int)commandsPlayer2.size()){
         //player1 still has moves
         if(player1MoveLine < (int)commandsPlayer1.size()) {
             moveMsg = game.playTurn(commandsPlayer1[player1MoveLine], PLAYER_1);
             player1MoveLine++;
             //if the move is illegal
-            if(moveMsg != EXECUTE_COMMAND_SUCCESS){
-                gameMsg = createEndGameMessage(toReason(moveMsg), PLAYER_2, player1MoveLine, -1);
-                break;
-            }
+            if(moveMsg != EXECUTE_COMMAND_SUCCESS)
+                return createEndGameMessage(toReason(moveMsg), PLAYER_2, player1MoveLine, -1);
             gameMsg = game.checkGameWinner();
             //the move led to end of the game
             if(gameMsg.reason != NO_WINNER)
-                break;
+                return gameMsg;
         }
         //player2 still has moves
         if(player2MoveLine < (int)commandsPlayer2.size()) {
@@ -106,13 +99,15 @@ endGameMessage playGame(Game& game, const char* filePath_player1, const char* fi
             player2MoveLine++;
             //if the move is illegal
             if(moveMsg != EXECUTE_COMMAND_SUCCESS){
-                gameMsg = createEndGameMessage(toReason(moveMsg), PLAYER_1, player2MoveLine, -1);
-                break;
+                return createEndGameMessage(toReason(moveMsg), PLAYER_1, player2MoveLine, -1);
             }
             gameMsg = game.checkGameWinner();
+            if(gameMsg.reason != NO_WINNER)
+                return gameMsg;
         }
     }
-    return gameMsg;
+    //no more moves for both players
+    return createEndGameMessage(DRAW_NO_MORE_MOVES, NO_PLAYER);
 }
 
 void printNoPositioningFile(endGameMessage endGameMsg){
