@@ -14,6 +14,7 @@ endGameMessage validatePositioningFile(const char* filePath, vector<PositioningC
     Parser parser;
     PositioningCommand posCmd;
     while(getline(positioningFile, line)){
+        if(line.find_first_not_of(" \t\n\r") == line.npos) continue;
         posCmd = parser.parsePositioningCommandLine(line);
         //bad syntax
         if(posCmd.type == INVALID_POSITIONING_COMMAND){
@@ -72,6 +73,7 @@ endGameMessage parsingMoveFile(const char *filePath, vector<Command> &commands){
     string line;
     Command cmd;
     while(getline(movesFile, line)){
+        if(line.find_first_not_of(" \t\n\r") == line.npos) continue;
         cmd = parser.parseMoveCommand(line);
         commands.push_back(cmd);
     }
