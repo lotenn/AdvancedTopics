@@ -21,35 +21,35 @@ endGameMessage initializeGame(Game& game, const char* filePath_player1, const ch
     vector<PositioningCommand> posCommandsPlayer2;
     endGameMessage player1Msg = validatePositioningFile(filePath_player1, posCommandsPlayer1);
     //PLAYER1 has no positioning file
-    if(player1Msg.reason == NO_POSITIONING_FILE) {
+    if(player1Msg.mainReason == NO_POSITIONING_FILE) {
         player1Msg.winner = PLAYER_1;
         return player1Msg;
     }
     //PLAYER 2 has no positioning file
     endGameMessage player2Msg = validatePositioningFile(filePath_player2, posCommandsPlayer2);
-    if(player2Msg.reason == NO_POSITIONING_FILE){
+    if(player2Msg.mainReason == NO_POSITIONING_FILE){
         player2Msg.winner = PLAYER_2;
         return player2Msg;
     }
 
     //bad input error printing
-    if(badPositioningFile(player1Msg.reason))
-        printBadInputFile(player1Msg.reason, PLAYER_1);
-    if(badPositioningFile(player2Msg.reason))
-        printBadInputFile(player2Msg.reason, PLAYER_2);
+    if(badPositioningFile(player1Msg.mainReason))
+        printBadInputFile(player1Msg.mainReason, PLAYER_1);
+    if(badPositioningFile(player2Msg.mainReason))
+        printBadInputFile(player2Msg.mainReason, PLAYER_2);
 
     //draw
-    if(player1Msg.reason != NO_WINNER && player2Msg.reason != NO_WINNER){
+    if(player1Msg.mainReason != NO_WINNER && player2Msg.mainReason != NO_WINNER){
         return createEndGameMessage
                 (DRAW_POSITIONING_FILE_BOTH_PLAYERS, NO_PLAYER, player1Msg.errorLine1, player2Msg.errorLine1);
     }
     //player 1 has lost due to bad position file
-    else if(player1Msg.reason != NO_WINNER){
+    else if(player1Msg.mainReason != NO_WINNER){
         player1Msg.winner = PLAYER_2;
         return player1Msg;
     }
     //player 2 has lost due to bad position file
-    else if(player2Msg.reason != NO_WINNER){
+    else if(player2Msg.mainReason != NO_WINNER){
         player2Msg.winner = PLAYER_1;
         return player2Msg;
     }
@@ -66,13 +66,13 @@ endGameMessage playGame(Game& game, const char* filePath_player1, const char* fi
     vector<Command> commandsPlayer2;
     endGameMessage player1Msg = parsingMoveFile(filePath_player1, commandsPlayer1);
     //PLAYER1 has no moves file
-    if(player1Msg.reason == NO_MOVE_FILE){
+    if(player1Msg.mainReason == NO_MOVE_FILE){
         player1Msg.winner = PLAYER_1;
         return player1Msg;
     }
     //PLAYER 2 has no moves file
     endGameMessage player2Msg = parsingMoveFile(filePath_player2, commandsPlayer2);
-    if(player2Msg.reason == NO_MOVE_FILE){
+    if(player2Msg.mainReason == NO_MOVE_FILE){
         player2Msg.winner = PLAYER_1;
         return player2Msg;
     }
@@ -90,7 +90,7 @@ endGameMessage playGame(Game& game, const char* filePath_player1, const char* fi
                 return createEndGameMessage(toReason(moveMsg), PLAYER_2, player1MoveLine, -1);
             gameMsg = game.checkGameWinner();
             //the move led to end of the game
-            if(gameMsg.reason != NO_WINNER)
+            if(gameMsg.mainReason != NO_WINNER)
                 return gameMsg;
         }
         //player2 still has moves
@@ -102,7 +102,7 @@ endGameMessage playGame(Game& game, const char* filePath_player1, const char* fi
                 return createEndGameMessage(toReason(moveMsg), PLAYER_1, player2MoveLine, -1);
             }
             gameMsg = game.checkGameWinner();
-            if(gameMsg.reason != NO_WINNER)
+            if(gameMsg.mainReason != NO_WINNER)
                 return gameMsg;
         }
     }
@@ -119,18 +119,18 @@ void printNoMoveFile(endGameMessage endGameMsg){
 }
 
 void endGame(Game& game, endGameMessage endGameMsg, const char* outputFilePath){
-    if (endGameMsg.reason == NO_POSITIONING_FILE){
+    if (endGameMsg.mainReason == NO_POSITIONING_FILE){
         printNoPositioningFile(endGameMsg);
         return;
     }
-    else if(endGameMsg.reason == NO_MOVE_FILE){
+    else if(endGameMsg.mainReason == NO_MOVE_FILE){
         printNoMoveFile(endGameMsg);
         return;
     }
     else{
         game.raisePlayerScore(1, endGameMsg.winner);
-        if(badMovesFile(endGameMsg.reason))
-            printBadInputFile(endGameMsg.reason, getOpposite(endGameMsg.winner));
+        if(badMovesFile(endGameMsg.mainReason))
+            printBadInputFile(endGameMsg.mainReason, getOpposite(endGameMsg.winner));
         string winner, reason, board;
         winner = getWinnerString(endGameMsg.winner);
         reason = getReasonString(endGameMsg);

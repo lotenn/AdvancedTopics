@@ -77,13 +77,22 @@ endGameReason toReason(executeCommandMessage msg);
 string getBadInputFileMessage(endGameReason reason);
 
 struct endGameMessage{
-    endGameReason reason;
+    endGameReason mainReason;
+    endGameReason reason1;
+    endGameReason reason2;
     playerEnum winner;
     int errorLine1;
     int errorLine2;
 };
 
 string getReasonString(endGameMessage);
+
+endGameMessage createEndGameMessage(endGameReason mainReason,
+									endGameReason reason1,
+									endGameReason reason2,
+									playerEnum winner,
+									int _errorLine1,
+									int _errorLine2);
 
 endGameMessage createEndGameMessage(endGameReason reason, playerEnum winner, int _errorLine1, int _errorLine2);
 

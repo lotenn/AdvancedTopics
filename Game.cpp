@@ -77,18 +77,23 @@ string getReasonString(endGameMessage endGameMsg){
     reasons[DRAW_POSITIONING_ENDED_WITH_NO_MOVING_TOOLS] = "A tie - moving PIECEs are eaten by both players in the position files";
     reasons[DRAW_POSITIONING_FILE_BOTH_PLAYERS] = "Bad Positioning input file for both players - player 1: line "+to_string(endGameMsg.errorLine1)+", player 2: line "+to_string(endGameMsg.errorLine2);
 
-    auto str = reasons.find(endGameMsg.reason);
+    auto str = reasons.find(endGameMsg.mainReason);
     return str != reasons.end() ? str->second : "";
 }
 
-endGameMessage createEndGameMessage(endGameReason reason, playerEnum winner, int _errorLine1, int _errorLine2){
-    endGameMessage message;
-    message.reason = reason;
-    message.winner = winner;
-    message.errorLine1 = _errorLine1;
-    message.errorLine2 = _errorLine2;
+endGameMessage createEndGameMessage(endGameReason _mainReason, endGameReason _reason1, endGameReason _reason2, playerEnum _winner, int _errorLine1, int _errorLine2){
+    endGameMessage msg;
+    msg.mainReason = _mainReason;
+    msg.reason1 = _reason1;
+    msg.reason2 = _reason2;
+    msg.winner = _winner;
+    msg.errorLine1 = _errorLine1;
+    msg.errorLine2 = _errorLine2;
+    return msg;
+}
 
-    return message;
+endGameMessage createEndGameMessage(endGameReason reason, playerEnum winner, int _errorLine1, int _errorLine2){
+    return createEndGameMessage(reason, NO_WINNER, NO_WINNER, winner, _errorLine1, _errorLine2);
 }
 
 endGameMessage createEndGameMessage(endGameReason reason, playerEnum winner){

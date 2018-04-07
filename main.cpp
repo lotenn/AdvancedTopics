@@ -11,7 +11,7 @@ int main() {
     const char* outputFilePath = "../rps.output";
 
     endGameMessage endGameMsg = initializeGame(game,positioningFilePath_player1,positioningFilePath_player2);
-    if(endGameMsg.reason != NO_WINNER){
+    if(endGameMsg.mainReason != NO_WINNER){
         endGame(game, endGameMsg, outputFilePath);
         return 0;
     }
