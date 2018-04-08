@@ -78,6 +78,7 @@ string getReasonString(endGameMessage endGameMsg){
     reasons[BAD_MOVE_FILE_CELL_OCCUPIED] = "Bad Moves input file for "+toString(getOpposite(endGameMsg.winner))+" - line "+to_string(endGameMsg.errorLine1);
     reasons[BAD_MOVE_FILE_NOT_JOKER] = "Bad Moves input file for "+toString(getOpposite(endGameMsg.winner))+" - line "+to_string(endGameMsg.errorLine1);
     reasons[DRAW_NO_MORE_MOVES] = "A tie - both Moves input files done without a winner";
+    reasons[DRAW_NO_MOVING_TOOLS] = "A tie - moving PIECEs are eaten by both players";
     reasons[DRAW_POSITIONING_ENDED_WITH_NO_FLAGS] = "A tie - all flags are eaten by both players in the position files";
     reasons[DRAW_POSITIONING_ENDED_WITH_NO_MOVING_TOOLS] = "A tie - moving PIECEs are eaten by both players in the position files";
     reasons[DRAW_BAD_POSITIONING_FILE_BOTH_PLAYERS] = "Bad Positioning input file for both players - player 1: line "+to_string(endGameMsg.errorLine1)+", player 2: line "+to_string(endGameMsg.errorLine2);
@@ -362,6 +363,7 @@ endGameReason Game::playerHasLost(vector<Tool*> playerTools){
     else{return NO_WINNER;}
 }
 
+//todo: add documentation
 endGameMessage Game::checkGameWinner(){
     endGameReason player1LossReason = playerHasLost(this->player1Tools);
     endGameReason player2LossReason = playerHasLost(this->player2Tools);
@@ -371,7 +373,7 @@ endGameMessage Game::checkGameWinner(){
             return createEndGameMessage(DRAW_POSITIONING_ENDED_WITH_NO_FLAGS, NO_PLAYER);
         }
         else{
-            return createEndGameMessage(DRAW_POSITIONING_ENDED_WITH_NO_MOVING_TOOLS, NO_PLAYER);
+            return createEndGameMessage(DRAW_NO_MOVING_TOOLS, NO_PLAYER);
         }
 
     }

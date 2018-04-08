@@ -68,7 +68,10 @@ endGameMessage initializeGame(Game& game, const char* filePath_player1, const ch
     else{
         game.setPlayerTools(posCommandsPlayer1, PLAYER_1);
         game.setPlayerTools(posCommandsPlayer2, PLAYER_2);
-        return game.checkGameWinner();
+        endGameMessage msg = game.checkGameWinner();
+        if(msg.mainReason == DRAW_NO_MORE_MOVES)
+            msg.mainReason = DRAW_BAD_POSITIONING_FILE_BOTH_PLAYERS;
+        return msg;
     }
 }
 
