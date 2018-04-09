@@ -354,31 +354,30 @@ endGameReason Game::playerHasLost(vector<Tool*> playerTools){
     int movingToolsCount=0;
     for(Tool *tool:playerTools) {
         if (tool->IsPositioned()) {
-            if (tool->getType() == FLAG) { flagsCount++; }
-            else if (tool->canMove()) { movingToolsCount++; }
+            if (tool->getType() == FLAG) {flagsCount++;}
+            else if (tool->canMove()) {movingToolsCount++;}
         }
     }
     if(flagsCount==0){return NO_MORE_FLAGS;}
     else if(movingToolsCount==0){return NO_MOVING_TOOLS;}
-    else{return NO_WINNER;}
+    else {return NO_WINNER;}
 }
 
-//todo: add documentation
+
 endGameMessage Game::checkGameWinner(){
     endGameReason player1LossReason = playerHasLost(this->player1Tools);
     endGameReason player2LossReason = playerHasLost(this->player2Tools);
-
+    //In case of draw
     if(player1LossReason != NO_WINNER && player2LossReason != NO_WINNER){
-        if(player1LossReason == NO_MORE_FLAGS){
-            return createEndGameMessage(DRAW_POSITIONING_ENDED_WITH_NO_FLAGS, NO_PLAYER);
-        }
-        else{
-            return createEndGameMessage(DRAW_NO_MOVING_TOOLS, NO_PLAYER);
-        }
-
+        //Possible only at end of pos. file reading of both players
+        if(player1LossReason == NO_MORE_FLAGS) {return createEndGameMessage(DRAW_POSITIONING_ENDED_WITH_NO_FLAGS, NO_PLAYER); }
+        //Possible at both game states (init and play) thus an additional check will be conducted at game init
+        else {return createEndGameMessage(DRAW_NO_MOVING_TOOLS, NO_PLAYER);}
     }
+    //Single winner
     else if(player1LossReason != NO_WINNER) {return createEndGameMessage(player1LossReason, PLAYER_2);}
     else if(player2LossReason != NO_WINNER) {return createEndGameMessage(player2LossReason, PLAYER_1);}
+    //Game is not finished
     else {return createEndGameMessage(NO_WINNER, NO_PLAYER);}
 }
 
