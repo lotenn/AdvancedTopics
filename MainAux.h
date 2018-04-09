@@ -7,8 +7,6 @@
 
 using namespace std;
 
-endGameMessage initializeGame(Game& game, const char* filePath_player1, const char* filePath_player2);
-
 void printNoPositioningFile(endGameMessage endGameMsg);
 
 void printNoMoveFile(endGameMessage endGameMsg);
@@ -17,8 +15,10 @@ bool badInputFile(endGameReason reason);
 
 void printBadInputFile(endGameMessage msg);
 
-void endGame(Game& game, endGameMessage endGameMsg, const char* outputFilePath);
+endGameMessage initializeGame(Game& game, const char* filePath_player1, const char* filePath_player2);
 
 endGameMessage playGame(Game& game, const char* filePath_player1, const char* filePath_player2);
+
+void endGame(Game& game, endGameMessage endGameMsg, const char* outputFilePath);
 
 #endif //EX1_MAINAUX_H

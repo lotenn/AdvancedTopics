@@ -6,9 +6,17 @@ bool badPositioningFile(endGameReason reason){
             reason == DRAW_BAD_POSITIONING_FILE_BOTH_PLAYERS);
 }
 
+void printNoPositioningFile(endGameMessage endGameMsg){
+    cout << "No Positioning input file for " << toString(endGameMsg.winner) << endl;
+}
+
 bool badMovesFile(endGameReason reason){
     return (reason == BAD_MOVE_FILE_NOT_YOUR_TOOL || reason == BAD_MOVE_FILE_TOOL_CANT_MOVE ||
             reason == BAD_MOVE_FILE_CELL_OCCUPIED || reason == BAD_MOVE_FILE_NOT_JOKER || reason == BAD_MOVE_FILE_INVALID);
+}
+
+void printNoMoveFile(endGameMessage endGameMsg){
+    cout << "No Moves input file for " << toString(endGameMsg.winner) << endl;
 }
 
 bool badInputFile(endGameReason reason){
@@ -54,17 +62,17 @@ endGameMessage initializeGame(Game& game, const char* filePath_player1, const ch
                 (DRAW_BAD_POSITIONING_FILE_BOTH_PLAYERS, player1Msg.mainReason, player2Msg.mainReason,
                  NO_PLAYER, player1Msg.errorLine1, player2Msg.errorLine1);
     }
-    //player 1 has lost due to bad position file
+        //player 1 has lost due to bad position file
     else if(player1Msg.mainReason != NO_WINNER){
         player1Msg.winner = PLAYER_2;
         return player1Msg;
     }
-    //player 2 has lost due to bad position file
+        //player 2 has lost due to bad position file
     else if(player2Msg.mainReason != NO_WINNER){
         player2Msg.winner = PLAYER_1;
         return player2Msg;
     }
-    //no file problems, placing tool as specified
+        //no file problems, placing tool as specified
     else{
         game.setPlayerTools(posCommandsPlayer1, PLAYER_1);
         game.setPlayerTools(posCommandsPlayer2, PLAYER_2);
@@ -74,7 +82,6 @@ endGameMessage initializeGame(Game& game, const char* filePath_player1, const ch
         return msg;
     }
 }
-
 
 executeCommandMessage playTurn(Game& game, Command cmd, playerEnum player){
     game.setCurrentPlayer(player);
@@ -142,14 +149,6 @@ endGameMessage playGame(Game& game, const char* filePath_player1, const char* fi
     }
     //no more moves for both players
     return createEndGameMessage(DRAW_NO_MORE_MOVES, NO_PLAYER);
-}
-
-void printNoPositioningFile(endGameMessage endGameMsg){
-    cout << "No Positioning input file for " << toString(endGameMsg.winner) << endl;
-}
-
-void printNoMoveFile(endGameMessage endGameMsg){
-    cout << "No Moves input file for " << toString(endGameMsg.winner) << endl;
 }
 
 void endGame(Game& game, endGameMessage endGameMsg, const char* outputFilePath){

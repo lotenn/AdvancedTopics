@@ -60,11 +60,6 @@ string getBadInputFileMessage(endGameReason reason){
 }
 
 string getReasonString(endGameMessage endGameMsg){
-//    if(endGameMsg.mainReason == DRAW_BAD_POSITIONING_FILE_BOTH_PLAYERS &&
-//       (endGameMsg.reason1==BAD_POSITIONING_FILE_NOT_ENOUGH_FLAGS || endGameMsg.reason2==BAD_POSITIONING_FILE_NOT_ENOUGH_FLAGS)){
-//        string str;
-//        str = "Bad Positioning input file for both players
-//    }
     map<endGameReason, string> reasons;
     reasons[NO_MORE_FLAGS] = "All flags of the opponent are captured";
     reasons[NO_MOVING_TOOLS] = "All moving PIECEs of the opponent are eaten";
@@ -78,7 +73,7 @@ string getReasonString(endGameMessage endGameMsg){
     reasons[BAD_MOVE_FILE_CELL_OCCUPIED] = "Bad Moves input file for "+toString(getOpposite(endGameMsg.winner))+" - line "+to_string(endGameMsg.errorLine1);
     reasons[BAD_MOVE_FILE_NOT_JOKER] = "Bad Moves input file for "+toString(getOpposite(endGameMsg.winner))+" - line "+to_string(endGameMsg.errorLine1);
     reasons[DRAW_NO_MORE_MOVES] = "A tie - both Moves input files done without a winner";
-    reasons[DRAW_NO_MOVING_TOOLS] = "A tie - moving PIECEs are eaten by both players";
+    reasons[DRAW_NO_MOVING_TOOLS] = "A tie - all moving PIECEs are eaten by both players";
     reasons[DRAW_POSITIONING_ENDED_WITH_NO_FLAGS] = "A tie - all flags are eaten by both players in the position files";
     reasons[DRAW_POSITIONING_ENDED_WITH_NO_MOVING_TOOLS] = "A tie - moving PIECEs are eaten by both players in the position files";
     reasons[DRAW_BAD_POSITIONING_FILE_BOTH_PLAYERS] = "Bad Positioning input file for both players - player 1: line "+to_string(endGameMsg.errorLine1)+", player 2: line "+to_string(endGameMsg.errorLine2);
@@ -238,7 +233,6 @@ void Game::setPlayerTools(const vector<PositioningCommand> &commands, playerEnum
                 }
                 //a matching tool must be found (commands are valid) thus no "else" statement is needed
             }
-
         }
         //joker commands
         else{
@@ -271,7 +265,6 @@ void Game::resetGameBoard(){
     for(Tool *tool: player2Tools)
         tool->removeTool();
 }
-
 
 void Game::setCurrentPlayer(playerEnum player){
     if(player == NO_PLAYER)
@@ -362,7 +355,6 @@ endGameReason Game::playerHasLost(vector<Tool*> playerTools){
     else if(movingToolsCount==0){return NO_MOVING_TOOLS;}
     else {return NO_WINNER;}
 }
-
 
 endGameMessage Game::checkGameWinner(){
     endGameReason player1LossReason = playerHasLost(this->player1Tools);

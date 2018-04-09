@@ -67,13 +67,14 @@ endGameMessage validatePositioningFile(const char* filePath, vector<PositioningC
 endGameMessage parsingMoveFile(const char *filePath, vector<Command> &commands){
     ifstream movesFile;
     movesFile.open(filePath, ios::in);
+    //file is not opened / created
     if(!movesFile.is_open()) {return createEndGameMessage(NO_MOVE_FILE, NO_PLAYER);}
 
     Parser parser;
     string line;
     Command cmd;
     while(getline(movesFile, line)){
-        if(line.find_first_not_of(" \t\n\r") == line.npos) {continue;}
+                if(line.find_first_not_of(" \t\n\r") == line.npos) {continue;}  //Disregarding all-whitespace lines
         cmd = parser.parseMoveCommand(line);
         commands.push_back(cmd);
     }
@@ -83,12 +84,15 @@ endGameMessage parsingMoveFile(const char *filePath, vector<Command> &commands){
 
 void generateOutputFile(const char *outputFilePath, string winner, string reason, string board){
     ofstream outputFile;
-    //todo: check if the file is opened properly
     outputFile.open(outputFilePath);
-    outputFile << "Winner: " << winner << endl;
-    outputFile << "Reason: " << reason << endl;
-    outputFile << endl;
-    outputFile << board << endl;
-    outputFile.close();
+    if(outputFile.is_open()) {
+        outputFile << "Winner: " << winner << endl;
+        outputFile << "Reason: " << reason << endl;
+        outputFile << endl;
+        outputFile << board << endl;
+        outputFile.close();
+    }
+    else cout<<"Error: Failed to open output file '" << outputFilePath << "'" <<endl;
+
 }
 
